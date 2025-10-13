@@ -17,5 +17,11 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 
 ## Automatisierte Vorschau
 Für jeden Push und Pull Request kompiliert GitHub Actions automatisch die Datei `main.tex`.
-Der erzeugte PDF-Export wird als Build-Artefakt mit dem Namen `hm-beamer-template`
-verfügbar gemacht und lässt sich direkt aus der Aktionsseite herunterladen.
+Das Ergebnis steht auf zwei Wegen bereit:
+
+- **Direkte Vorschau:** Für Branches im Hauptrepository wird die generierte PDF-Datei über
+  GitHub Pages veröffentlicht. Der Link erscheint im Zusammenfassungsbereich des Workflows
+  ("Summary" ➝ Abschnitt „Preview“) und führt direkt zur PDF bzw. einer Einbettungsseite.
+- **Build-Artefakt:** Unabhängig davon steht weiterhin das Artefakt `hm-beamer-template`
+  zur Verfügung. Bei Pull Requests aus Forks (bei denen GitHub Pages nicht deployt werden
+  darf) ist dies der Fallback zum Herunterladen der PDF.
