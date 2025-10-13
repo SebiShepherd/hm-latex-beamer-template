@@ -36,7 +36,7 @@ jobs:
   preview:
     name: Publish preview to GitHub Pages
     needs: build
-    if: github.event.repository.has_pages && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
+    if: ${{ github.event.repository.has_pages && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') }}
     permissions:
       pages: write
       id-token: write
@@ -111,7 +111,7 @@ jobs:
   preview-disabled:
     name: Skip note for disabled Pages preview
     needs: build
-    if: !github.event.repository.has_pages
+    if: ${{ !github.event.repository.has_pages }}
     runs-on: ubuntu-latest
     steps:
       - name: Explain how to enable Pages preview
@@ -125,7 +125,7 @@ jobs:
   preview-pr-summary:
     name: Pull request preview hint
     needs: build
-    if: github.event.repository.has_pages && github.event_name == 'pull_request'
+    if: ${{ github.event.repository.has_pages && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - name: Explain PR preview behaviour
