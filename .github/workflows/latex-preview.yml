@@ -14,6 +14,7 @@ jobs:
   build:
     name: Compile LaTeX template
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -32,6 +33,23 @@ jobs:
           path: main.pdf
           if-no-files-found: error
           retention-days: 7
+
+      - name: Document artifact availability
+        run: |
+          echo "### Preview" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Download the \`hm-beamer-template\` artifact from this run to inspect the compiled PDF." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain pull request behaviour
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "- Pull request runs from forks provide the artifact above. Direct GitHub Pages previews come from branch pushes in the main repository." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain how to enable Pages preview
+        if: ${{ !github.event.repository.has_pages }}
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          echo "- Enable GitHub Pages with the \"GitHub Actions\" source under <https://github.com/${REPO}/settings/pages> to unlock direct previews." >> "$GITHUB_STEP_SUMMARY"
 
   preview:
     name: Publish preview to GitHub Pages
@@ -94,7 +112,6 @@ jobs:
         env:
           BRANCH: ${{ github.ref_name }}
         run: |
-          echo "### Preview" >>"$GITHUB_STEP_SUMMARY"
           echo "- GitHub Pages rejected the deployment for branch \`${BRANCH}\`. Review the github-pages environment protection rules to allow deployments from this branch." >>"$GITHUB_STEP_SUMMARY"
           echo "- The \`hm-beamer-template\` artifact remains available for download." >>"$GITHUB_STEP_SUMMARY"
 
@@ -104,34 +121,5 @@ jobs:
           PDF_NAME: main-${{ github.sha }}.pdf
           PAGE_URL: ${{ steps.deploy.outputs.page_url }}
         run: |
-          echo "### Preview" >> "$GITHUB_STEP_SUMMARY"
           echo "- [Open the rendered PDF](${PAGE_URL}${PDF_NAME})" >> "$GITHUB_STEP_SUMMARY"
           echo "- [View the preview page](${PAGE_URL})" >> "$GITHUB_STEP_SUMMARY"
-
-  preview-disabled:
-    name: Skip note for disabled Pages preview
-    needs: build
-    if: ${{ !github.event.repository.has_pages }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Explain how to enable Pages preview
-        env:
-          REPO: ${{ github.repository }}
-        run: |
-          echo "### Preview" >> "$GITHUB_STEP_SUMMARY"
-          echo "- GitHub Pages deployment is currently disabled. Download the \`hm-beamer-template\` artifact to inspect the PDF." >> "$GITHUB_STEP_SUMMARY"
-          echo "- Enable GitHub Pages with the \"GitHub Actions\" source under <https://github.com/${REPO}/settings/pages> to unlock direct previews." >> "$GITHUB_STEP_SUMMARY"
-
-  preview-pr-summary:
-    name: Pull request preview hint
-    needs: build
-    if: ${{ github.event.repository.has_pages && github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Explain PR preview behaviour
-        env:
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-        run: |
-          echo "### Preview" >>"$GITHUB_STEP_SUMMARY"
-          echo "- Pull request runs always publish the \`hm-beamer-template\` artifact. Direct GitHub Pages previews come from branch pushes in the main repository." >>"$GITHUB_STEP_SUMMARY"
-          echo "- If a deployment is blocked, adjust the github-pages environment protection rules to permit the relevant branches." >>"$GITHUB_STEP_SUMMARY"

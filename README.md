@@ -16,16 +16,17 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 4. Fußzeilentext per `\sethmfooter{...}` ändern.
 
 ## Automatisierte Vorschau
-Für jeden Push und Pull Request kompiliert GitHub Actions automatisch die Datei `main.tex`.
-Das Ergebnis steht auf zwei Wegen bereit:
+Für jeden Push kompiliert GitHub Actions automatisch die Datei `main.tex`.
+Bei Pull-Requests aus Forks wird derselbe Build zusätzlich vom PR-Event ausgelöst, damit auch
+externe Beiträge ein Ergebnis erhalten. Die Ausgabe erscheint auf zwei Wegen:
 
-- **Direkte Vorschau:** Falls GitHub Pages aktiviert ist (siehe unten), erscheint im
-  Zusammenfassungsbereich des Workflows ("Summary" ➝ Abschnitt „Preview“) ein Link zur
-  gerenderten PDF bzw. zur Einbettungsseite. GitHub Pages muss Deployments aus dem jeweiligen
+- **Direkte Vorschau:** Falls GitHub Pages aktiviert ist (siehe unten) und der Branch im
+  Hauptrepository liegt, erzeugt der Push-Lauf eine Vorschauseite samt PDF-Link im
+  Workflow-"Summary" (Abschnitt „Preview“). GitHub Pages muss Deployments aus dem jeweiligen
   Branch erlauben.
-- **Build-Artefakt:** Unabhängig davon wird das Artefakt `hm-beamer-template` erzeugt.
-  Der Download liefert eine ZIP-Datei mit der `main.pdf` im Inneren und dient als Fallback –
-  z. B. für Pull Requests aus Forks oder wenn GitHub Pages deaktiviert ist.
+- **Build-Artefakt:** Jeder Lauf lädt das Artefakt `hm-beamer-template` hoch. Der Download
+  enthält die `main.pdf` als Fallback – etwa für Pull Requests aus Forks oder wenn GitHub Pages
+  deaktiviert ist.
 
 ### GitHub-Pages-Preview aktivieren
 1. GitHub Pages einschalten und als Quelle **GitHub Actions** auswählen
