@@ -1,0 +1,231 @@
+name: Build Beamer preview
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+concurrency:
+  group: preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Compile LaTeX template
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up LaTeX environment
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          latexmk_shell_escape: true
+          latexmk_use_lualatex: false
+
+      - name: Upload compiled PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hm-beamer-template
+          path: main.pdf
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Document artifact availability
+        run: |
+          echo "### Preview" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Download the \`hm-beamer-template\` artifact from this run to inspect the compiled PDF." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain pull request behaviour
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          echo "- Pull request runs from forks provide the artifact above. Direct GitHub Pages previews come from branch pushes in the main repository." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain how to enable Pages preview
+        if: ${{ !github.event.repository.has_pages }}
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          echo "- Enable GitHub Pages with the \"GitHub Actions\" source under <https://github.com/${REPO}/settings/pages> to unlock direct previews." >> "$GITHUB_STEP_SUMMARY"
+
+  preview:
+    name: Publish preview to GitHub Pages
+    needs: build
+    if: ${{ github.event.repository.has_pages && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') }}
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    runs-on: ubuntu-latest
+    outputs:
+      page_url: ${{ steps.preview_metadata.outputs.page_url }}
+      pdf_url: ${{ steps.preview_metadata.outputs.pdf_url }}
+    steps:
+      - name: Download compiled PDF
+        uses: actions/download-artifact@v4
+        with:
+          name: hm-beamer-template
+          path: preview
+
+      - name: Prepare preview bundle
+        env:
+          PDF_NAME: main-${{ github.sha }}.pdf
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          mkdir -p public
+          cp preview/main.pdf "public/${PDF_NAME}"
+          cat <<EOF > public/index.html
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <title>HM Beamer preview</title>
+              <style>
+                body { font-family: sans-serif; margin: 2rem; }
+                iframe { width: 100%; height: 90vh; border: none; }
+              </style>
+            </head>
+            <body>
+              <h1>HM Beamer preview</h1>
+              <p>
+                <a href="./${PDF_NAME}">Download the compiled PDF</a>
+                for commit <code>${GITHUB_SHA}</code> on branch <code>${BRANCH_NAME}</code>.
+              </p>
+              <iframe src="./${PDF_NAME}" title="Preview PDF"></iframe>
+            </body>
+          </html>
+          EOF
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Handle deployment protection
+        if: steps.deploy.outcome != 'success'
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          echo "- GitHub Pages rejected the deployment for branch \`${BRANCH}\`. Review the github-pages environment protection rules to allow deployments from this branch." >>"$GITHUB_STEP_SUMMARY"
+          echo "- The \`hm-beamer-template\` artifact remains available for download." >>"$GITHUB_STEP_SUMMARY"
+
+      - name: Post preview link to summary
+        if: steps.deploy.outcome == 'success'
+        env:
+          PDF_NAME: main-${{ github.sha }}.pdf
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+        run: |
+          echo "- [Open the rendered PDF](${PAGE_URL}${PDF_NAME})" >> "$GITHUB_STEP_SUMMARY"
+          echo "- [View the preview page](${PAGE_URL})" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Record preview metadata
+        id: preview_metadata
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          PDF_NAME: main-${{ github.sha }}.pdf
+        run: |
+          {
+            echo "page_url=${PAGE_URL}";
+            if [ -n "${PAGE_URL}" ]; then
+              echo "pdf_url=${PAGE_URL}${PDF_NAME}";
+            else
+              echo "pdf_url=";
+            fi
+          } >> "$GITHUB_OUTPUT"
+
+  comment:
+    name: Update pull request preview comment
+    needs:
+      - build
+      - preview
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') && needs.preview.result == 'success' && needs.preview.outputs.page_url != '' }}
+    permissions:
+      pull-requests: write
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Locate associated pull request
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
+            const branch = process.env.GITHUB_REF_NAME;
+            const { data: pulls } = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: "open",
+              head: `${owner}:${branch}`,
+              per_page: 1,
+            });
+
+            if (!pulls.length) {
+              core.info("No open pull request for this branch.");
+              return "";
+            }
+
+            return String(pulls[0].number);
+
+      - name: Upsert preview comment
+        if: ${{ steps.pr.outputs.result != '' }}
+        uses: actions/github-script@v7
+        env:
+          PR_NUMBER: ${{ steps.pr.outputs.result }}
+          PAGE_URL: ${{ needs.preview.outputs.page_url }}
+          PDF_URL: ${{ needs.preview.outputs.pdf_url }}
+          COMMIT_SHA: ${{ github.sha }}
+        with:
+          script: |
+            const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
+            const prNumber = Number(process.env.PR_NUMBER);
+            const pageUrl = process.env.PAGE_URL;
+            const pdfUrl = process.env.PDF_URL;
+            const sha = process.env.COMMIT_SHA;
+
+            const body = [
+              '<!-- preview-links -->',
+              '### 📄 Preview available',
+              '',
+              `- [View the preview page](${pageUrl})`,
+              `- [Download the compiled PDF](${pdfUrl})`,
+              '',
+              'Artifacts remain available from the workflow run if you need a fallback.',
+              '',
+              `_Last updated for \`${sha}\`._`,
+            ].join('\n');
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number: prNumber,
+            });
+
+            const existing = comments.find(
+              (comment) => comment.user?.login === "github-actions[bot]" && comment.body?.includes("<!-- preview-links -->"),
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body,
+              });
+            }
