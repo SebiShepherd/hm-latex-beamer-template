@@ -36,7 +36,7 @@ jobs:
   preview:
     name: Publish preview to GitHub Pages
     needs: build
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false
+    if: vars.ENABLE_PAGES_PREVIEW == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false)
     permissions:
       pages: write
       id-token: write
@@ -95,3 +95,17 @@ jobs:
           echo "### Preview" >> "$GITHUB_STEP_SUMMARY"
           echo "- [Open the rendered PDF](${{ steps.deploy.outputs.page_url }}${PDF_NAME})" >> "$GITHUB_STEP_SUMMARY"
           echo "- [View the preview page](${{ steps.deploy.outputs.page_url }})" >> "$GITHUB_STEP_SUMMARY"
+
+  preview-disabled:
+    name: Skip note for disabled Pages preview
+    needs: build
+    if: vars.ENABLE_PAGES_PREVIEW != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain how to enable Pages preview
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          echo "### Preview" >> "$GITHUB_STEP_SUMMARY"
+          echo "- GitHub Pages deployment is currently disabled. Download the \`hm-beamer-template\` artifact to inspect the PDF." >> "$GITHUB_STEP_SUMMARY"
+          echo "- To enable direct previews, add a repository variable \`ENABLE_PAGES_PREVIEW\` set to \`true\` and configure GitHub Pages with the \"GitHub Actions\" source under <https://github.com/${REPO}/settings/pages>." >> "$GITHUB_STEP_SUMMARY"
