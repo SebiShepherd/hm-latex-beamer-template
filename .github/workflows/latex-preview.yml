@@ -61,6 +61,9 @@ jobs:
     environment:
       name: github-pages
     runs-on: ubuntu-latest
+    outputs:
+      page_url: ${{ steps.preview_metadata.outputs.page_url }}
+      pdf_url: ${{ steps.preview_metadata.outputs.pdf_url }}
     steps:
       - name: Download compiled PDF
         uses: actions/download-artifact@v4
@@ -123,3 +126,72 @@ jobs:
         run: |
           echo "- [Open the rendered PDF](${PAGE_URL}${PDF_NAME})" >> "$GITHUB_STEP_SUMMARY"
           echo "- [View the preview page](${PAGE_URL})" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Record preview metadata
+        id: preview_metadata
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          PDF_NAME: main-${{ github.sha }}.pdf
+        run: |
+          {
+            echo "page_url=${PAGE_URL}";
+            if [ -n "${PAGE_URL}" ]; then
+              echo "pdf_url=${PAGE_URL}${PDF_NAME}";
+            else
+              echo "pdf_url=";
+            fi
+          } >> "$GITHUB_OUTPUT"
+
+  comment:
+    name: Update pull request preview comment
+    needs:
+      - build
+      - preview
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') && needs.preview.result == 'success' && needs.preview.outputs.page_url != '' }}
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Locate associated pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_REF: ${{ github.ref_name }}
+          HEAD_OWNER: ${{ github.repository_owner }}
+        run: |
+          PR_DATA=$(gh api repos/${GITHUB_REPOSITORY}/pulls -f state=open -f head="${HEAD_OWNER}:${HEAD_REF}" --jq '.[0] // empty')
+          if [ -z "${PR_DATA}" ]; then
+            echo "pr_number=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          PR_NUMBER=$(printf '%s' "${PR_DATA}" | jq -r '.number')
+          echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - name: Skip when no pull request is open
+        if: ${{ steps.pr.outputs.pr_number == '' }}
+        run: echo "No open pull request for this branch."
+
+      - name: Upsert preview comment
+        if: ${{ steps.pr.outputs.pr_number != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.pr_number }}
+          PAGE_URL: ${{ needs.preview.outputs.page_url }}
+          PDF_URL: ${{ needs.preview.outputs.pdf_url }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          COMMENT_BODY=$(jq -nr \
+            --arg page "$PAGE_URL" \
+            --arg pdf "$PDF_URL" \
+            --arg sha "$COMMIT_SHA" \
+            '"<!-- preview-links -->\n### 📄 Preview available\n\n- [View the preview page](" + $page + ")\n- [Download the compiled PDF](" + $pdf + ")\n\nArtifacts remain available from the workflow run if you need a fallback.\n\n_Last updated for `" + $sha + "`._"'
+          )
+
+          COMMENT_ID=$(gh api --paginate repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments --jq 'map(select(.user.login == "github-actions[bot]" and (.body | contains("<!-- preview-links -->")))) | .[0].id // empty')
+
+          if [ -n "${COMMENT_ID}" ]; then
+            gh api repos/${GITHUB_REPOSITORY}/issues/comments/${COMMENT_ID} -X PATCH -f body="${COMMENT_BODY}"
+          else
+            gh api repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments -X POST -f body="${COMMENT_BODY}"
+          fi

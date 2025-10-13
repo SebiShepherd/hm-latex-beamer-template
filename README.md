@@ -22,8 +22,9 @@ externe Beiträge ein Ergebnis erhalten. Die Ausgabe erscheint auf zwei Wegen:
 
 - **Direkte Vorschau:** Falls GitHub Pages aktiviert ist (siehe unten) und der Branch im
   Hauptrepository liegt, erzeugt der Push-Lauf eine Vorschauseite samt PDF-Link im
-  Workflow-"Summary" (Abschnitt „Preview“). GitHub Pages muss Deployments aus dem jeweiligen
-  Branch erlauben.
+  Workflow-"Summary" (Abschnitt „Preview“) **und** hinterlässt in offenen Pull Requests einen
+  Kommentar mit den direkten Links. GitHub Pages muss Deployments aus dem jeweiligen Branch
+  erlauben.
 - **Build-Artefakt:** Jeder Lauf lädt das Artefakt `hm-beamer-template` hoch. Der Download
   enthält die `main.pdf` als Fallback – etwa für Pull Requests aus Forks oder wenn GitHub Pages
   deaktiviert ist.
