@@ -78,6 +78,7 @@ jobs:
         run: |
           mkdir -p public
           cp preview/main.pdf "public/${PDF_NAME}"
+          cp preview/main.pdf public/main.pdf
           cat <<EOF > public/index.html
           <!DOCTYPE html>
           <html lang="en">
