@@ -14,3 +14,8 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 3. Optional: Eigenes Logo einbinden – Datei ins Projekt laden
    und in `main.tex` `\sethmlogo{<dein_logo>}` setzen.
 4. Fußzeilentext per `\sethmfooter{...}` ändern.
+
+## Automatisierte Vorschau
+Für jeden Push und Pull Request kompiliert GitHub Actions automatisch die Datei `main.tex`.
+Der erzeugte PDF-Export wird als Build-Artefakt mit dem Namen `hm-beamer-template`
+verfügbar gemacht und lässt sich direkt aus der Aktionsseite herunterladen.
