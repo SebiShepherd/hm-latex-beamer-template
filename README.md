@@ -19,19 +19,22 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 Für jeden Push und Pull Request kompiliert GitHub Actions automatisch die Datei `main.tex`.
 Das Ergebnis steht auf zwei Wegen bereit:
 
-- **Direkte Vorschau:** Falls GitHub Pages aktiviert ist (siehe unten), erscheint im
-  Zusammenfassungsbereich des Workflows ("Summary" ➝ Abschnitt „Preview“) ein Link zur
-  gerenderten PDF bzw. einer Einbettungsseite.
+- **Direkte Vorschau:** Falls GitHub Pages aktiviert ist (siehe unten) und der Branch in den
+  Pages-Bereich fällt, erscheint im Zusammenfassungsbereich des Workflows ("Summary" ➝
+  Abschnitt „Preview“) ein Link zur gerenderten PDF bzw. einer Einbettungsseite.
 - **Build-Artefakt:** Unabhängig davon wird das Artefakt `hm-beamer-template` erzeugt.
   Der Download liefert eine ZIP-Datei mit der `main.pdf` im Inneren und dient als Fallback –
   z. B. für Pull Requests aus Forks oder wenn GitHub Pages deaktiviert ist.
 
 ### GitHub-Pages-Preview aktivieren
-1. Repository-Variable `ENABLE_PAGES_PREVIEW` mit dem Wert `true` anlegen
-   (Repository → *Settings* → *Secrets and variables* → *Actions* → *Variables*).
-2. GitHub Pages einschalten und als Quelle **GitHub Actions** auswählen
+1. GitHub Pages einschalten und als Quelle **GitHub Actions** auswählen
    (Repository → *Settings* → *Pages*).
+2. Optional: Repository-Variable `PAGES_PREVIEW_BRANCH` setzen (Repository → *Settings* →
+   *Secrets and variables* → *Actions* → *Variables*), um zu steuern, welche Branches deployen
+   dürfen (Standard: Default-Branch des Repos). Der Wert `*` erlaubt alle Branches – dann
+   müssen im Environment **github-pages** allerdings auch die entsprechenden Branch-Regeln
+   freigegeben werden.
 
-Erst wenn beide Schritte erledigt sind, wird die Workflow-Job-Ausgabe automatisch auf
-GitHub Pages veröffentlicht. Bis dahin erscheint im Workflow-Zusammenfassungstab ein Hinweis,
-dass stattdessen das Artefakt verwendet werden soll.
+Sobald GitHub Pages aktiviert ist, veröffentlicht der Workflow erfolgreiche Branch-Builds aus
+dem gewählten Scope automatisch. Für alle anderen Fälle zeigt die Workflow-Zusammenfassung an,
+dass das Artefakt heruntergeladen werden kann.
