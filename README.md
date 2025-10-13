@@ -1,0 +1,16 @@
+# HM Beamer Template (Overleaf-ready)
+
+Weißer Hintergrund, schwarze Schrift, Akzentfarbe HM-Rot (#fb5454).
+Logo unten links, Copyright zentriert, Seitenzahl rechts.
+
+## Dateien
+- `main.tex` – Beispielpräsentation
+- `beamerthemeHM.sty` – Theme (Farben, Fußzeile, Titelfolie)
+- `hm_logo.png` – Platzhalterlogo (ersetzen durch echtes HM-Logo)
+
+## Nutzung
+1. Projekt in Overleaf anlegen → Upload dieses ZIPs.
+2. In `main.tex` Meta-Daten anpassen (`\title`, `\author`, `\date`).
+3. Optional: Eigenes Logo einbinden – Datei ins Projekt laden
+   und in `main.tex` `\sethmlogo{<dein_logo>}` setzen.
+4. Fußzeilentext per `\sethmfooter{...}` ändern.

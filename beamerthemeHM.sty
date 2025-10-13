@@ -1,0 +1,75 @@
+\ProvidesPackage{beamerthemeHM}[2025/10/12 HM Beamer Theme]
+
+% Colors
+\RequirePackage{xcolor}
+\definecolor{HMRed}{HTML}{FB5454}
+\definecolor{HMGray}{HTML}{E6E6E6}
+
+% Basic beamer settings
+\mode<presentation>
+\setbeamercolor{structure}{fg=black}
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{title}{fg=black,bg=white}
+\setbeamercolor{frametitle}{fg=black,bg=white}
+\setbeamercolor{block title}{bg=HMGray,fg=black}
+\setbeamercolor{block body}{bg=HMGray!60,fg=black}
+
+\setbeamertemplate{navigation symbols}{}
+
+% Fonts: Helvetica as default sans
+\RequirePackage[T1]{fontenc}
+\RequirePackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Custom commands for footer text
+\newcommand{\hmfootertext}{}
+\newcommand{\sethmfooter}[1]{\renewcommand{\hmfootertext}{#1}}
+
+% Logo handling (user provides hm_logo.png or pdf in project root)
+\newcommand{\hmlogopath}{hm_logo.png}
+\newcommand{\sethmlogo}[1]{\renewcommand{\hmlogopath}{#1}}
+
+% Footline: HM logo left, custom text center, frame numbers right
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,left]{footline}%
+      \hspace{1ex}\raisebox{-0.2ex}{\includegraphics[height=2.1ex]{\hmlogopath}}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.64\paperwidth,ht=3ex,dp=1ex,center]{footline}%
+      \usebeamerfont{footline}\footnotesize \hmfootertext
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,right]{footline}%
+      \usebeamerfont{footline}\footnotesize \insertframenumber{}%
+      \hspace{1.25ex}
+    \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+}
+
+% Title page with big HM logo bottom-left
+\setbeamertemplate{title page}{%
+  \begingroup
+  \vbox{}
+  \vfill
+  \begin{flushleft}
+    {\usebeamercolor[fg]{title}\fontsize{22pt}{26pt}\selectfont\bfseries\inserttitle\par}
+    \vspace{0.3em}
+    {\usebeamercolor[fg]{title}\fontsize{16pt}{20pt}\selectfont\insertsubtitle\par}
+    \vspace{1.5em}
+    {\normalsize \insertauthor\par}
+    {\normalsize \insertinstitute\par}
+    \vspace{1em}
+    {\normalsize \insertdate\par}
+  \end{flushleft}
+  \vfill
+  \hbox to \textwidth{%
+    \includegraphics[height=2.2cm]{\hmlogopath}\hfill
+  }
+  \endgroup
+}
+
+% Itemize bullets in HM red
+\setbeamercolor{item}{fg=HMRed}
+\setbeamertemplate{itemize items}[circle]
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
