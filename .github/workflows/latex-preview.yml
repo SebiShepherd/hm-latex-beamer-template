@@ -36,7 +36,7 @@ jobs:
   preview:
     name: Publish preview to GitHub Pages
     needs: build
-    if: github.event.repository.has_pages && github.event_name == 'push'
+    if: github.event.repository.has_pages && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
     permissions:
       pages: write
       id-token: write
@@ -44,67 +44,16 @@ jobs:
       name: github-pages
     runs-on: ubuntu-latest
     steps:
-      - name: Determine deployment scope
-        id: scope
-        env:
-          TARGET_BRANCH: ${{ vars.PAGES_PREVIEW_BRANCH }}
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-          REF: ${{ github.ref }}
-        run: |
-          target="${TARGET_BRANCH:-$DEFAULT_BRANCH}"
-
-          if [[ "${REF}" == refs/heads/* ]]; then
-            branch="${REF#refs/heads/}"
-          else
-            branch=""
-          fi
-
-          echo "target=${target}" >>"$GITHUB_OUTPUT"
-          echo "branch=${branch}" >>"$GITHUB_OUTPUT"
-
-          if [[ "${REF}" != refs/heads/* ]]; then
-            echo "allowed=false" >>"$GITHUB_OUTPUT"
-            echo "reason=non-branch" >>"$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [[ "${TARGET_BRANCH}" == "*" ]]; then
-            echo "allowed=true" >>"$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [[ "${branch}" == "${target}" ]]; then
-            echo "allowed=true" >>"$GITHUB_OUTPUT"
-          else
-            echo "allowed=false" >>"$GITHUB_OUTPUT"
-            echo "reason=branch-mismatch" >>"$GITHUB_OUTPUT"
-          fi
-
-      - name: Explain skipped deployment
-        if: steps.scope.outputs.allowed != 'true'
-        env:
-          TARGET: ${{ steps.scope.outputs.target }}
-          BRANCH: ${{ steps.scope.outputs.branch }}
-        run: |
-          echo "### Preview" >>"$GITHUB_STEP_SUMMARY"
-          if [[ -n "${BRANCH}" ]]; then
-            echo "- GitHub Pages deployment is limited to the branch \`${TARGET}\`. Current ref \`${BRANCH}\` was built, but only the artifact is available." >>"$GITHUB_STEP_SUMMARY"
-          else
-            echo "- GitHub Pages deployment is only attempted for branch pushes. Download the \`hm-beamer-template\` artifact to inspect the PDF." >>"$GITHUB_STEP_SUMMARY"
-          fi
-          echo "- To change the scope, update the repository variable \`PAGES_PREVIEW_BRANCH\` (use \`*\` for any branch after adjusting the github-pages environment rules)." >>"$GITHUB_STEP_SUMMARY"
-
       - name: Download compiled PDF
-        if: steps.scope.outputs.allowed == 'true'
         uses: actions/download-artifact@v4
         with:
           name: hm-beamer-template
           path: preview
 
       - name: Prepare preview bundle
-        if: steps.scope.outputs.allowed == 'true'
         env:
           PDF_NAME: main-${{ github.sha }}.pdf
+          BRANCH_NAME: ${{ github.ref_name }}
         run: |
           mkdir -p public
           cp preview/main.pdf "public/${PDF_NAME}"
@@ -123,7 +72,7 @@ jobs:
               <h1>HM Beamer preview</h1>
               <p>
                 <a href="./${PDF_NAME}">Download the compiled PDF</a>
-                for commit <code>${GITHUB_SHA}</code>.
+                for commit <code>${GITHUB_SHA}</code> on branch <code>${BRANCH_NAME}</code>.
               </p>
               <iframe src="./${PDF_NAME}" title="Preview PDF"></iframe>
             </body>
@@ -131,29 +80,26 @@ jobs:
           EOF
 
       - name: Upload GitHub Pages artifact
-        if: steps.scope.outputs.allowed == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
       - name: Deploy to GitHub Pages
-        if: steps.scope.outputs.allowed == 'true'
         id: deploy
         uses: actions/deploy-pages@v4
         continue-on-error: true
 
       - name: Handle deployment protection
-        if: steps.scope.outputs.allowed == 'true' && steps.deploy.outcome != 'success'
+        if: steps.deploy.outcome != 'success'
         env:
-          TARGET: ${{ steps.scope.outputs.target }}
-          BRANCH: ${{ steps.scope.outputs.branch }}
+          BRANCH: ${{ github.ref_name }}
         run: |
           echo "### Preview" >>"$GITHUB_STEP_SUMMARY"
-          echo "- GitHub Pages rejected the deployment for branch \`${BRANCH}\`. Check the github-pages environment protection rules or adjust the \`PAGES_PREVIEW_BRANCH\` variable." >>"$GITHUB_STEP_SUMMARY"
+          echo "- GitHub Pages rejected the deployment for branch \`${BRANCH}\`. Review the github-pages environment protection rules to allow deployments from this branch." >>"$GITHUB_STEP_SUMMARY"
           echo "- The \`hm-beamer-template\` artifact remains available for download." >>"$GITHUB_STEP_SUMMARY"
 
       - name: Post preview link to summary
-        if: steps.scope.outputs.allowed == 'true' && steps.deploy.outcome == 'success'
+        if: steps.deploy.outcome == 'success'
         env:
           PDF_NAME: main-${{ github.sha }}.pdf
           PAGE_URL: ${{ steps.deploy.outputs.page_url }}
@@ -184,10 +130,8 @@ jobs:
     steps:
       - name: Explain PR preview behaviour
         env:
-          TARGET_BRANCH: ${{ vars.PAGES_PREVIEW_BRANCH }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          target="${TARGET_BRANCH:-$DEFAULT_BRANCH}"
           echo "### Preview" >>"$GITHUB_STEP_SUMMARY"
-          echo "- Pull request runs publish the \`hm-beamer-template\` artifact. Direct GitHub Pages previews are created when the corresponding branch push matches \`${TARGET}\`." >>"$GITHUB_STEP_SUMMARY"
-          echo "- Adjust the \`PAGES_PREVIEW_BRANCH\` variable (use \`*\` for any branch) and the github-pages environment rules if you need previews for additional branches." >>"$GITHUB_STEP_SUMMARY"
+          echo "- Pull request runs always publish the \`hm-beamer-template\` artifact. Direct GitHub Pages previews come from branch pushes in the main repository." >>"$GITHUB_STEP_SUMMARY"
+          echo "- If a deployment is blocked, adjust the github-pages environment protection rules to permit the relevant branches." >>"$GITHUB_STEP_SUMMARY"

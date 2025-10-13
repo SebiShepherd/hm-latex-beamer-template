@@ -19,9 +19,10 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 Für jeden Push und Pull Request kompiliert GitHub Actions automatisch die Datei `main.tex`.
 Das Ergebnis steht auf zwei Wegen bereit:
 
-- **Direkte Vorschau:** Falls GitHub Pages aktiviert ist (siehe unten) und der Branch in den
-  Pages-Bereich fällt, erscheint im Zusammenfassungsbereich des Workflows ("Summary" ➝
-  Abschnitt „Preview“) ein Link zur gerenderten PDF bzw. einer Einbettungsseite.
+- **Direkte Vorschau:** Falls GitHub Pages aktiviert ist (siehe unten), erscheint im
+  Zusammenfassungsbereich des Workflows ("Summary" ➝ Abschnitt „Preview“) ein Link zur
+  gerenderten PDF bzw. zur Einbettungsseite. GitHub Pages muss Deployments aus dem jeweiligen
+  Branch erlauben.
 - **Build-Artefakt:** Unabhängig davon wird das Artefakt `hm-beamer-template` erzeugt.
   Der Download liefert eine ZIP-Datei mit der `main.pdf` im Inneren und dient als Fallback –
   z. B. für Pull Requests aus Forks oder wenn GitHub Pages deaktiviert ist.
@@ -29,12 +30,10 @@ Das Ergebnis steht auf zwei Wegen bereit:
 ### GitHub-Pages-Preview aktivieren
 1. GitHub Pages einschalten und als Quelle **GitHub Actions** auswählen
    (Repository → *Settings* → *Pages*).
-2. Optional: Repository-Variable `PAGES_PREVIEW_BRANCH` setzen (Repository → *Settings* →
-   *Secrets and variables* → *Actions* → *Variables*), um zu steuern, welche Branches deployen
-   dürfen (Standard: Default-Branch des Repos). Der Wert `*` erlaubt alle Branches – dann
-   müssen im Environment **github-pages** allerdings auch die entsprechenden Branch-Regeln
-   freigegeben werden.
+2. Falls das Environment **github-pages** geschützt ist, dort die Branch-Regeln so anpassen,
+   dass auch Feature-Branches deployen dürfen (Repository → *Settings* → *Environments* →
+   *github-pages*).
 
-Sobald GitHub Pages aktiviert ist, veröffentlicht der Workflow erfolgreiche Branch-Builds aus
-dem gewählten Scope automatisch. Für alle anderen Fälle zeigt die Workflow-Zusammenfassung an,
-dass das Artefakt heruntergeladen werden kann.
+Sobald GitHub Pages aktiviert ist, veröffentlicht der Workflow erfolgreiche Branch-Builds
+automatisch. Für alle anderen Fälle zeigt die Workflow-Zusammenfassung an, dass das Artefakt
+heruntergeladen werden kann.
