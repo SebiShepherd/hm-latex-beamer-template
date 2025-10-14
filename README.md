@@ -1,7 +1,8 @@
 # HM Beamer Template (Overleaf-ready)
 
 Weißer Hintergrund, schwarze Schrift, Akzentfarbe HM-Rot (#fb5454).
-Logo unten links, Copyright zentriert, Seitenzahl rechts.
+Großes HM-Logo auf der Titelfolie links unten, Inhaltsfolien mit rotem
+Highlight-Balken. Fußzeile: Logo, Dokumenttitel – Autor, Seitenzahl.
 
 <p align="center">
   <a href="https://sebishepherd.github.io/hm-latex-beamer-template/" target="_blank" rel="noopener noreferrer"><img alt="🚀 Live-Preview öffnen" src="https://img.shields.io/badge/%F0%9F%9A%80%20Live--Preview%20%C3%B6ffnen-fb5454?style=for-the-badge&logo=github&logoColor=white" /></a>
@@ -18,9 +19,14 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 ## Nutzung
 1. Projekt in Overleaf anlegen → Upload dieses ZIPs.
 2. In `main.tex` Meta-Daten anpassen (`\title`, `\author`, `\date`).
-3. Optional: Eigenes Logo einbinden – Datei ins Projekt laden
+3. Hochschulkontext für die Titelfolie setzen (`\sethmuniversity`,
+   `\sethmfaculty`, `\sethmchair`, `\sethmmentor`, `\sethmsemester`).
+4. Optional: Eigenes Logo einbinden – Datei ins Projekt laden
    und in `main.tex` `\sethmlogo{<dein_logo>}` setzen.
-4. Fußzeilentext per `\sethmfooter{...}` ändern.
+5. Optionaler Zusatztext in der Fußzeile per `\sethmfooter{...}`.
+
+Auf Inhaltsfolien lässt sich der rote Balken mit `\hmhighlight{...}`
+einfügen. Der Text der Zeile nutzt automatisch die HM-Akzentfarbe.
 
 ## Automatisierte Vorschau
 Für jeden Push kompiliert GitHub Actions automatisch die Datei `main.tex`.

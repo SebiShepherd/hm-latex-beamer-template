@@ -4,15 +4,20 @@
 \RequirePackage{xcolor}
 \definecolor{HMRed}{HTML}{FB5454}
 \definecolor{HMGray}{HTML}{E6E6E6}
+\definecolor{HMBlack}{HTML}{000000}
+
+\RequirePackage{etoolbox}
 
 % Basic beamer settings
 \mode<presentation>
-\setbeamercolor{structure}{fg=black}
-\setbeamercolor{normal text}{fg=black,bg=white}
-\setbeamercolor{title}{fg=black,bg=white}
-\setbeamercolor{frametitle}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=HMBlack}
+\setbeamercolor{normal text}{fg=HMBlack,bg=white}
+\setbeamercolor{title}{fg=HMBlack,bg=white}
+\setbeamercolor{frametitle}{fg=HMBlack,bg=white}
 \setbeamercolor{block title}{bg=HMGray,fg=black}
 \setbeamercolor{block body}{bg=HMGray!60,fg=black}
+\setbeamercolor{framesubtitle}{fg=HMBlack}
+\setbeamercolor{hmhighlight}{fg=white,bg=HMRed}
 
 \setbeamertemplate{navigation symbols}{}
 
@@ -25,47 +30,72 @@
 \newcommand{\hmfootertext}{}
 \newcommand{\sethmfooter}[1]{\renewcommand{\hmfootertext}{#1}}
 
+% Additional metadata for title layout
+\newcommand{\hmUniversity}{}
+\newcommand{\hmFaculty}{}
+\newcommand{\hmChair}{}
+\newcommand{\hmMentor}{}
+\newcommand{\hmSemester}{}
+
+\newcommand{\sethmuniversity}[1]{\renewcommand{\hmUniversity}{#1}}
+\newcommand{\sethmfaculty}[1]{\renewcommand{\hmFaculty}{#1}}
+\newcommand{\sethmchair}[1]{\renewcommand{\hmChair}{#1}}
+\newcommand{\sethmmentor}[1]{\renewcommand{\hmMentor}{#1}}
+\newcommand{\sethmsemester}[1]{\renewcommand{\hmSemester}{#1}}
+
+\newcommand{\hmprintline}[1]{\ifdefempty{#1}{}{#1\par\vspace{0.6em}}}
+
 % Logo handling (user provides hm_logo.png or pdf in project root)
 \newcommand{\hmlogopath}{hm_logo.png}
 \newcommand{\sethmlogo}[1]{\renewcommand{\hmlogopath}{#1}}
 
-% Footline: HM logo left, custom text center, frame numbers right
-\setbeamertemplate{footline}{%
-  \leavevmode%
-  \hbox{%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,left]{footline}%
-      \hspace{1ex}\raisebox{-0.2ex}{\includegraphics[height=2.1ex]{\hmlogopath}}%
+% Footline: HM logo left, title and author center, frame numbers right
+\makeatletter
+\defbeamertemplate*{footline}{hm}{%
+  \ifbeamer@plainframe
+    \leavevmode\vspace*{4ex}% empty space on plain frames (e.g. titlepage)
+  \else
+    \leavevmode%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=4ex,dp=1.2ex,leftskip=1.8em,rightskip=1.8em]{footline}%
+      \raisebox{-0.1ex}{\includegraphics[height=2.6ex]{\hmlogopath}}\hspace{1.2em}%
+      {\usebeamerfont{footline}\footnotesize
+        \insertshorttitle{} \textendash{} \insertshortauthor{}
+        \ifdefempty{\hmfootertext}{}{\hspace{1em}\hmfootertext}}
+      \hfill
+      {\usebeamerfont{footline}\footnotesize \insertframenumber{}}
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.64\paperwidth,ht=3ex,dp=1ex,center]{footline}%
-      \usebeamerfont{footline}\footnotesize \hmfootertext
-    \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,right]{footline}%
-      \usebeamerfont{footline}\footnotesize \insertframenumber{}%
-      \hspace{1.25ex}
-    \end{beamercolorbox}%
-  }%
-  \vskip0pt%
-}
+  \fi}
+\setbeamertemplate{footline}[hm]
+\makeatother
 
-% Title page with big HM logo bottom-left
+% Title page with institutional block on the left and large logo bottom-left
+\setbeamerfont{title}{series=\bfseries,size*={22pt}{26pt}}
+\setbeamerfont{subtitle}{series=\mdseries,size*={14pt}{18pt}}
 \setbeamertemplate{title page}{%
   \begingroup
-  \vbox{}
-  \vfill
-  \begin{flushleft}
-    {\usebeamercolor[fg]{title}\fontsize{22pt}{26pt}\selectfont\bfseries\inserttitle\par}
-    \vspace{0.3em}
-    {\usebeamercolor[fg]{title}\fontsize{16pt}{20pt}\selectfont\insertsubtitle\par}
-    \vspace{1.5em}
-    {\normalsize \insertauthor\par}
-    {\normalsize \insertinstitute\par}
-    \vspace{1em}
-    {\normalsize \insertdate\par}
-  \end{flushleft}
-  \vfill
-  \hbox to \textwidth{%
-    \includegraphics[height=2.2cm]{\hmlogopath}\hfill
-  }
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{title page}%
+    \vbox to \paperheight{%
+      \hbox{%
+        \begin{minipage}[t]{0.46\paperwidth}
+          {\raggedright\small
+            \hmprintline{\hmUniversity}
+            \hmprintline{\hmFaculty}
+            \hmprintline{\hmChair}
+            {\ifdefempty{\insertauthor}{}{\textbf{\insertauthor}\par\vspace{0.6em}}}
+            \hmprintline{\hmMentor}}
+        \end{minipage}%
+        \hfill
+        \begin{minipage}[t]{0.46\paperwidth}
+          \raggedleft
+          {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+          \ifdefempty{\insertsubtitle}{}{\vspace{0.4em}{\usebeamerfont{subtitle}\insertsubtitle\par}}
+          \ifdefempty{\hmSemester}{}{\vspace{1.2em}{\normalsize \hmSemester\par}}
+        \end{minipage}%
+      }%
+      \vfill
+      \hbox{\includegraphics[width=0.52\paperwidth]{\hmlogopath}}
+    }%
+  \end{beamercolorbox}%
   \endgroup
 }
 
@@ -73,3 +103,20 @@
 \setbeamercolor{item}{fg=HMRed}
 \setbeamertemplate{itemize items}[circle]
 \setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamerfont{framesubtitle}{size=\large}
+
+% Custom frametitle layout with subtitle support
+\setbeamertemplate{frametitle}{%
+  \vspace{1.2em}%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=2.5em,rightskip=2.5em]{frametitle}
+    {\usebeamerfont{frametitle}\insertframetitle\par}
+    \ifdefempty{\insertframesubtitle}{}{\vspace{0.35em}{\usebeamerfont{framesubtitle}\insertframesubtitle\par}}
+  \end{beamercolorbox}\vspace{0.6em}
+}
+
+% Highlight command for HM red banner
+\newcommand{\hmhighlight}[1]{%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=2.5em,rightskip=2.5em,sep=0.9em]{hmhighlight}
+    {\usebeamerfont{framesubtitle}#1}
+  \end{beamercolorbox}\vspace{1.2em}
+}
