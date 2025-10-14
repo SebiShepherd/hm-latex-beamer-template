@@ -1,7 +1,10 @@
 # HM Beamer Template (Overleaf-ready)
 
 Weißer Hintergrund, schwarze Schrift, Akzentfarbe HM-Rot (#fb5454).
-Logo unten links, Copyright zentriert, Seitenzahl rechts.
+Titelfolie und Inhaltsfolien entsprechen dem offiziellen Layout der Hochschule
+München: großes Logo links unten, Metadaten links oben, Titel rechts. Auf den
+Inhaltsfolien erscheinen Titel, Untertitel, ein roter Trennerbalken sowie Fußzeile
+mit Logo, Dokumenttitel und Autor:in.
 
 <p align="center">
   <a href="https://sebishepherd.github.io/hm-latex-beamer-template/" target="_blank" rel="noopener noreferrer"><img alt="🚀 Live-Preview öffnen" src="https://img.shields.io/badge/%F0%9F%9A%80%20Live--Preview%20%C3%B6ffnen-fb5454?style=for-the-badge&logo=github&logoColor=white" /></a>
@@ -17,10 +20,13 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 
 ## Nutzung
 1. Projekt in Overleaf anlegen → Upload dieses ZIPs.
-2. In `main.tex` Meta-Daten anpassen (`\title`, `\author`, `\date`).
+2. In `main.tex` Meta-Daten anpassen (`\title`, `\author`, `\institute`, `\date`).
 3. Optional: Eigenes Logo einbinden – Datei ins Projekt laden
    und in `main.tex` `\sethmlogo{<dein_logo>}` setzen.
-4. Fußzeilentext per `\sethmfooter{...}` ändern.
+4. Fußzeile zeigt standardmäßig „Titel – Autor:in“. Über `\sethmfooter{...}`
+   lässt sich dieser Text bei Bedarf überschreiben.
+5. Rote Inhaltsboxen wie auf den Referenzfolien mit `\hmredbox{Titel}`
+   erstellen.
 
 ## Automatisierte Vorschau
 Für jeden Push kompiliert GitHub Actions automatisch die Datei `main.tex`.

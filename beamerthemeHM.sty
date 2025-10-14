@@ -21,55 +21,103 @@
 \RequirePackage[scaled]{helvet}
 \renewcommand{\familydefault}{\sfdefault}
 
+% TikZ for positioned title page elements
+\RequirePackage{tikz}
+
 % Custom commands for footer text
 \newcommand{\hmfootertext}{}
 \newcommand{\sethmfooter}[1]{\renewcommand{\hmfootertext}{#1}}
+
+\makeatletter
+\newcommand{\hmfootermiddle}{%
+  \ifx\hmfootertext\@empty
+    \insertshorttitle\,–\,\insertshortauthor
+  \else
+    \hmfootertext
+  \fi}
+\makeatother
 
 % Logo handling (user provides hm_logo.png or pdf in project root)
 \newcommand{\hmlogopath}{hm_logo.png}
 \newcommand{\sethmlogo}[1]{\renewcommand{\hmlogopath}{#1}}
 
 % Footline: HM logo left, custom text center, frame numbers right
+\setbeamerfont{footline}{size=\small}
+\setbeamercolor{footline}{fg=black,bg=white}
+
 \setbeamertemplate{footline}{%
   \leavevmode%
   \hbox{%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,left]{footline}%
-      \hspace{1ex}\raisebox{-0.2ex}{\includegraphics[height=2.1ex]{\hmlogopath}}%
+    \begin{beamercolorbox}[wd=.18\paperwidth,ht=4.5ex,dp=2ex,leftskip=0.8em]{footline}%
+      \raisebox{-0.2ex}{\includegraphics[height=0.9cm]{\hmlogopath}}%
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.64\paperwidth,ht=3ex,dp=1ex,center]{footline}%
-      \usebeamerfont{footline}\footnotesize \hmfootertext
+    \begin{beamercolorbox}[wd=.64\paperwidth,ht=4.5ex,dp=2ex,leftskip=0.3em]{footline}%
+      \usebeamerfont{footline}\hmfootermiddle
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,right]{footline}%
-      \usebeamerfont{footline}\footnotesize \insertframenumber{}%
-      \hspace{1.25ex}
+    \begin{beamercolorbox}[wd=.18\paperwidth,ht=4.5ex,dp=2ex,rightskip=1em]{footline}%
+      \usebeamerfont{footline}\insertframenumber{}
     \end{beamercolorbox}%
   }%
   \vskip0pt%
 }
 
 % Title page with big HM logo bottom-left
+\makeatletter
 \setbeamertemplate{title page}{%
-  \begingroup
-  \vbox{}
-  \vfill
-  \begin{flushleft}
-    {\usebeamercolor[fg]{title}\fontsize{22pt}{26pt}\selectfont\bfseries\inserttitle\par}
-    \vspace{0.3em}
-    {\usebeamercolor[fg]{title}\fontsize{16pt}{20pt}\selectfont\insertsubtitle\par}
-    \vspace{1.5em}
-    {\normalsize \insertauthor\par}
-    {\normalsize \insertinstitute\par}
-    \vspace{1em}
-    {\normalsize \insertdate\par}
-  \end{flushleft}
-  \vfill
-  \hbox to \textwidth{%
-    \includegraphics[height=2.2cm]{\hmlogopath}\hfill
-  }
-  \endgroup
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north west, text width=.42\paperwidth] at ([xshift=1.2cm,yshift=-1.6cm]current page.north west) {%
+      \raggedright\fontsize{12pt}{15pt}\selectfont
+      \insertinstitute\\[0.75em]
+      \insertauthor
+    };
+    \node[anchor=north east, text width=.45\paperwidth] at ([xshift=-1.2cm,yshift=-1.6cm]current page.north east) {%
+      \raggedleft\bfseries\fontsize{26pt}{30pt}\selectfont\inserttitle\par
+      \ifx\insertsubtitle\@empty\else
+        \vspace{0.3em}
+        {\normalfont\fontsize{18pt}{22pt}\selectfont\insertsubtitle\par}
+      \fi
+      \vspace{1.5em}
+      {\normalfont\fontsize{14pt}{18pt}\selectfont\insertdate\par}
+    };
+    \node[anchor=south west] at ([xshift=1.2cm,yshift=1.8cm]current page.south west) {%
+      \includegraphics[width=.38\paperwidth]{\hmlogopath}
+    };
+  \end{tikzpicture}
 }
+\makeatother
 
 % Itemize bullets in HM red
 \setbeamercolor{item}{fg=HMRed}
 \setbeamertemplate{itemize items}[circle]
 \setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamerfont{framesubtitle}{series=\bfseries,size=\normalsize}
+\setbeamercolor{framesubtitle}{fg=HMRed}
+
+\makeatletter
+\setbeamertemplate{frametitle}{%
+  \vbox{%
+    \vspace{0.8em}%
+    {\usebeamerfont{frametitle}\raggedright\insertframetitle\par}%
+    \ifx\insertframesubtitle\@empty
+    \else
+      \vspace{0.2em}%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\raggedright\insertframesubtitle\par}%
+    \fi
+    \vspace{0.6em}%
+    {\color{HMRed}\rule{\textwidth}{1.6pt}}%
+    \vspace{1.2em}%
+  }%
+}
+\makeatother
+
+\newcommand{\hmredbox}[1]{%
+  \par\vspace{0.4em}%
+  \colorbox{HMRed}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep\relax}{%
+      \vspace{0.45em}%
+      \raggedright\color{white}\bfseries #1\par
+      \vspace{0.2em}%
+    }%
+  }%
+  \par\vspace{1em}%
+}
