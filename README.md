@@ -1,7 +1,8 @@
 # HM Beamer Template (Overleaf-ready)
 
 Weißer Hintergrund, schwarze Schrift, Akzentfarbe HM-Rot (#fb5454).
-Logo unten links, Copyright zentriert, Seitenzahl rechts.
+Coverfolie mit zweispaltigem Kopf (Institution links, Titel rechts) und großem HM-Logo unten links.
+Inhaltsfolien mit Überschrift, Unterüberschrift, roter Highlight-Box und Fußzeile mit Logo, Dokumenttitel, Autor:in und Seitenzahl.
 
 <p align="center">
   <a href="https://sebishepherd.github.io/hm-latex-beamer-template/" target="_blank" rel="noopener noreferrer"><img alt="🚀 Live-Preview öffnen" src="https://img.shields.io/badge/%F0%9F%9A%80%20Live--Preview%20%C3%B6ffnen-fb5454?style=for-the-badge&logo=github&logoColor=white" /></a>
@@ -17,10 +18,11 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 
 ## Nutzung
 1. Projekt in Overleaf anlegen → Upload dieses ZIPs.
-2. In `main.tex` Meta-Daten anpassen (`\title`, `\author`, `\date`).
-3. Optional: Eigenes Logo einbinden – Datei ins Projekt laden
-   und in `main.tex` `\sethmlogo{<dein_logo>}` setzen.
-4. Fußzeilentext per `\sethmfooter{...}` ändern.
+2. In `main.tex` Meta-Daten anpassen (`\title`, `\subtitle`, `\author`, `\institute`, `\date`).
+3. Optional: Linke Cover-Spalte mit `\sethmcoverleft{...}` überschreiben (Standard: Institut + Autor:in).
+4. Optional: Rote Highlight-Leiste pro Slide via `\hmhighlight{...}` verwenden.
+5. Eigenes Logo einbinden – Datei ins Projekt laden und in `main.tex` `\sethmlogo{<dein_logo>}` setzen.
+6. Zusatzinfo in der Fußzeile per `\sethmfooter{...}` ergänzen (erscheint nach Titel und Autor:in).
 
 ## Automatisierte Vorschau
 Für jeden Push kompiliert GitHub Actions automatisch die Datei `main.tex`.

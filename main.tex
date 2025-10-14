@@ -10,14 +10,17 @@
 \usetheme{HM} % our custom theme
 
 % --- Meta ---
-\title{Titel der Präsentation}
-\subtitle{Optionaler Untertitel oder Slogan}
-\author{Vorname Nachname}
-\institute{Organisation oder Unternehmen \\ Abteilung oder Fakultät}
-\date{\today}
+\title[Geschäftsprozessmanagement]{Geschäftsprozessmanagement}
+\subtitle{Organisation}
+\author[Prof. Dr. Marcus Fischer]{Prof. Dr. Marcus Fischer}
+\institute{Hochschule München\\University of Applied Sciences\\Fakultät für Mathematik und Informatik\\Professur für Enterprise Architecture Management und betriebliche Informationssysteme}
+\date[Sommersemester 2025]{Sommersemester 2025}
 
-% Footer text (appears centered in the footline)
-\sethmfooter{© Autorenteam – Fakultät BW}
+% Left column on the cover slide
+\sethmcoverleft{\insertinstitute\\[0.75em]\insertauthor}
+
+% Optional additional footer information (appears after title and author)
+% \sethmfooter{Weiterführende Informationen}
 
 % If your logo has a different filename, set it here:
 % \sethmlogo{hm_logo.pdf}
@@ -33,7 +36,8 @@
 \end{frame}
 
 \section{Einführung}
-\begin{frame}{Einführung}
+\begin{frame}{Einführung}{Überblick}
+\hmhighlight{Worum geht es?}
 \begin{itemize}
   \item Stellen Sie hier die wichtigsten Punkte Ihrer Präsentation vor.
   \item Verwenden Sie kurze, prägnante Aussagen und ergänzen Sie sie ggf. um Stichworte.
@@ -42,7 +46,8 @@
 \end{frame}
 
 \section{Beispielblöcke}
-\begin{frame}{Beispielblöcke}
+\begin{frame}{Beispielblöcke}{Strukturierte Inhalte}
+\hmhighlight{Designrichtlinien}
 \begin{block}{Hinweis}
   Neutrale graue Kästen für strukturierte Inhalte.
 \end{block}
@@ -52,7 +57,8 @@
 \end{frame}
 
 \section{Zusammenfassung}
-\begin{frame}{Zusammenfassung}
+\begin{frame}{Zusammenfassung}{Key Takeaways}
+\hmhighlight{Das sollten Sie mitnehmen}
 \begin{itemize}
   \item Fassen Sie die Kernaussagen zusammen und leiten Sie zu nächsten Schritten über.
   \item Nutzen Sie optional die Akzentfarbe \textcolor{HMRed}{HM-Rot} für Highlights.

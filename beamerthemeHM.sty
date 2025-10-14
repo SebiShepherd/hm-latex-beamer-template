@@ -4,6 +4,7 @@
 \RequirePackage{xcolor}
 \definecolor{HMRed}{HTML}{FB5454}
 \definecolor{HMGray}{HTML}{E6E6E6}
+\definecolor{HMGrayDark}{HTML}{4F4F4F}
 
 % Basic beamer settings
 \mode<presentation>
@@ -11,6 +12,8 @@
 \setbeamercolor{normal text}{fg=black,bg=white}
 \setbeamercolor{title}{fg=black,bg=white}
 \setbeamercolor{frametitle}{fg=black,bg=white}
+\setbeamercolor{framesubtitle}{fg=HMGrayDark,bg=white}
+\setbeamercolor{hmhighlight}{fg=white,bg=HMRed}
 \setbeamercolor{block title}{bg=HMGray,fg=black}
 \setbeamercolor{block body}{bg=HMGray!60,fg=black}
 
@@ -25,51 +28,98 @@
 \newcommand{\hmfootertext}{}
 \newcommand{\sethmfooter}[1]{\renewcommand{\hmfootertext}{#1}}
 
+% Cover page helpers
+\newcommand{\hmcoverleft}{\insertinstitute\par\vspace{0.75em}\insertauthor}
+\newcommand{\sethmcoverleft}[1]{\renewcommand{\hmcoverleft}{#1}}
+
 % Logo handling (user provides hm_logo.png or pdf in project root)
 \newcommand{\hmlogopath}{hm_logo.png}
 \newcommand{\sethmlogo}[1]{\renewcommand{\hmlogopath}{#1}}
 
-% Footline: HM logo left, custom text center, frame numbers right
+% Footline: HM logo left, document title & author center-left, frame numbers right
+\makeatletter
 \setbeamertemplate{footline}{%
   \leavevmode%
   \hbox{%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,left]{footline}%
-      \hspace{1ex}\raisebox{-0.2ex}{\includegraphics[height=2.1ex]{\hmlogopath}}%
+    \begin{beamercolorbox}[wd=.18\paperwidth,ht=4ex,dp=1.5ex,left]{footline}%
+      \hspace{1.25ex}\raisebox{-0.35ex}{\includegraphics[height=3ex]{\hmlogopath}}%
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.64\paperwidth,ht=3ex,dp=1ex,center]{footline}%
-      \usebeamerfont{footline}\footnotesize \hmfootertext
+    \begin{beamercolorbox}[wd=.64\paperwidth,ht=4ex,dp=1.5ex,left]{footline}%
+      \usebeamerfont{footline}\footnotesize \insertshorttitle\,--\,\insertshortauthor
+      \ifx\hmfootertext\@empty\else\ \textbullet\ \hmfootertext\fi
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,right]{footline}%
-      \usebeamerfont{footline}\footnotesize \insertframenumber{}%
+    \begin{beamercolorbox}[wd=.18\paperwidth,ht=4ex,dp=1.5ex,right]{footline}%
+      \usebeamerfont{footline}\footnotesize \insertframenumber{}
       \hspace{1.25ex}
     \end{beamercolorbox}%
   }%
   \vskip0pt%
 }
+\makeatother
 
-% Title page with big HM logo bottom-left
+% Helpers for title page layout
+\newcommand{\hm@coverleft}{%
+  {\fontsize{10pt}{14pt}\selectfont\hmcoverleft}
+}
+
+\newcommand{\hm@coverright}{%
+  {\usebeamercolor[fg]{title}\fontsize{20pt}{24pt}\selectfont\bfseries\inserttitle\par}%
+  \vspace{0.6em}%
+  {\usebeamercolor[fg]{title}\fontsize{14pt}{18pt}\selectfont\insertsubtitle\par}%
+  \vspace{1.5em}%
+  {\fontsize{12pt}{16pt}\selectfont\insertdate\par}%
+}
+
+% Title page with big HM logo bottom-left and two-column header
 \setbeamertemplate{title page}{%
   \begingroup
-  \vbox{}
-  \vfill
-  \begin{flushleft}
-    {\usebeamercolor[fg]{title}\fontsize{22pt}{26pt}\selectfont\bfseries\inserttitle\par}
-    \vspace{0.3em}
-    {\usebeamercolor[fg]{title}\fontsize{16pt}{20pt}\selectfont\insertsubtitle\par}
-    \vspace{1.5em}
-    {\normalsize \insertauthor\par}
-    {\normalsize \insertinstitute\par}
-    \vspace{1em}
-    {\normalsize \insertdate\par}
-  \end{flushleft}
-  \vfill
-  \hbox to \textwidth{%
-    \includegraphics[height=2.2cm]{\hmlogopath}\hfill
-  }
+    \vspace*{1.5cm}%
+    \begin{minipage}[t]{0.46\textwidth}
+      \raggedright
+      \hm@coverleft
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.46\textwidth}
+      \raggedleft
+      \hm@coverright
+    \end{minipage}%
+    \vfill
+    \vspace*{0.5cm}%
+    \begin{flushleft}
+      \includegraphics[width=0.55\paperwidth]{\hmlogopath}
+    \end{flushleft}
   \endgroup
 }
+
+% Highlight bar command for frames
+\newcommand{\hmhighlight}[1]{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.2ex,dp=1.4ex,leftskip=1.5em,rightskip=1.5em]{hmhighlight}%
+    {\usebeamerfont{hmhighlight}#1}%
+  \end{beamercolorbox}%
+  \vspace{1.4em}%
+}
+
+\setbeamerfont{hmhighlight}{series=\bfseries,size=\large}
+
+% Frame title layout with subtitle and highlight bar spacing helper
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamerfont{framesubtitle}{series=\mdseries,size=\large}
+
+\makeatletter
+\setbeamertemplate{frametitle}{%
+  \vspace*{0.75em}%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=1.5em,rightskip=1.5em]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle\par
+    \ifx\insertframesubtitle\@empty\else
+      \vspace{0.15em}%
+      {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}\par
+    \fi
+  \end{beamercolorbox}%
+  \vspace{0.8em}%
+}
+\makeatother
 
 % Itemize bullets in HM red
 \setbeamercolor{item}{fg=HMRed}
 \setbeamertemplate{itemize items}[circle]
-\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
