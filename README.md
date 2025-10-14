@@ -3,19 +3,19 @@
 Weißer Hintergrund, schwarze Schrift, Akzentfarbe HM-Rot (#fb5454).
 Logo unten links, Copyright zentriert, Seitenzahl rechts.
 
-<p align="center">
+<p align="center" style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1.5rem 0;">
   <a
     href="https://sebishepherd.github.io/hm-latex-beamer-template/"
     target="_blank"
     rel="noopener noreferrer"
-    style="display:inline-block;padding:0.75em 1.5em;margin:0 0.5em;background:#fb5454;color:#ffffff;font-weight:600;border-radius:999px;text-decoration:none;"
-  >Live-Preview öffnen</a>
+    style="display:inline-flex;align-items:center;gap:0.5em;padding:0.85em 1.75em;margin:0;background:#fb5454;color:#ffffff;font-weight:600;border-radius:999px;text-decoration:none;box-shadow:0 6px 14px rgba(251,84,84,0.35);"
+  ><span aria-hidden="true">🚀</span><span>Live-Preview öffnen</span></a>
   <a
     href="https://sebishepherd.github.io/hm-latex-beamer-template/main.pdf"
     target="_blank"
     rel="noopener noreferrer"
-    style="display:inline-block;padding:0.75em 1.5em;margin:0 0.5em;background:#444444;color:#ffffff;font-weight:600;border-radius:999px;text-decoration:none;"
-  >Direkter PDF-Link</a>
+    style="display:inline-flex;align-items:center;gap:0.5em;padding:0.85em 1.75em;margin:0;background:#444444;color:#ffffff;font-weight:600;border-radius:999px;text-decoration:none;box-shadow:0 6px 14px rgba(0,0,0,0.25);"
+  ><span aria-hidden="true">📄</span><span>Direkter PDF-Link</span></a>
 </p>
 <p align="center"><small>Die Links zeigen stets auf das neueste Deployment von GitHub Pages.</small></p>
 
