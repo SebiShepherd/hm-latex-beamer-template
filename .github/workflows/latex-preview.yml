@@ -77,6 +77,7 @@ jobs:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
           mkdir -p public
+          cp preview/main.pdf public/main.pdf
           cp preview/main.pdf "public/${PDF_NAME}"
           cat <<EOF > public/index.html
           <!DOCTYPE html>

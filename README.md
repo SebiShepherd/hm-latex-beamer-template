@@ -3,6 +3,13 @@
 Weißer Hintergrund, schwarze Schrift, Akzentfarbe HM-Rot (#fb5454).
 Logo unten links, Copyright zentriert, Seitenzahl rechts.
 
+<p align="center">
+  <a href="https://sebishepherd.github.io/hm-latex-beamer-template/" target="_blank" rel="noopener noreferrer"><img alt="🚀 Live-Preview öffnen" src="https://img.shields.io/badge/%F0%9F%9A%80%20Live--Preview%20%C3%B6ffnen-fb5454?style=for-the-badge&logo=github&logoColor=white" /></a>
+  &#160;
+  <a href="https://sebishepherd.github.io/hm-latex-beamer-template/main.pdf" target="_blank" rel="noopener noreferrer"><img alt="📄 Direkter PDF-Link" src="https://img.shields.io/badge/%F0%9F%93%84%20Direkter%20PDF--Link-444444?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" /></a>
+</p>
+<p align="center"><small>Die Links zeigen stets auf das neueste Deployment von GitHub Pages.</small></p>
+
 ## Dateien
 - `main.tex` – Beispielpräsentation
 - `beamerthemeHM.sty` – Theme (Farben, Fußzeile, Titelfolie)
