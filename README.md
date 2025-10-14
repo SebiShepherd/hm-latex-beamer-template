@@ -5,13 +5,13 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 
 <p align="center">
   <a
-    href="https://sebisherpherd.github.io/hm-latex-beamer-template/"
+    href="https://sebishepherd.github.io/hm-latex-beamer-template/"
     target="_blank"
     rel="noopener noreferrer"
     style="display:inline-block;padding:0.75em 1.5em;margin:0 0.5em;background:#fb5454;color:#ffffff;font-weight:600;border-radius:999px;text-decoration:none;"
   >Live-Preview öffnen</a>
   <a
-    href="https://sebisherpherd.github.io/hm-latex-beamer-template/main.pdf"
+    href="https://sebishepherd.github.io/hm-latex-beamer-template/main.pdf"
     target="_blank"
     rel="noopener noreferrer"
     style="display:inline-block;padding:0.75em 1.5em;margin:0 0.5em;background:#444444;color:#ffffff;font-weight:600;border-radius:999px;text-decoration:none;"
