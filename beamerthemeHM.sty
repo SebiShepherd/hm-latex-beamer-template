@@ -28,20 +28,67 @@
 % Logo handling (user provides hm_logo.png or pdf in project root)
 \newcommand{\hmlogopath}{hm_logo.png}
 \newcommand{\sethmlogo}[1]{\renewcommand{\hmlogopath}{#1}}
+% Footer logo size on content slides (increase to enlarge the logo)
+% Example: \sethmfooterlogoheight{3ex} or {8pt}
+\newlength{\hmfooterlogoheight}\setlength{\hmfooterlogoheight}{2.6ex}
+\newcommand{\sethmfooterlogoheight}[1]{\setlength{\hmfooterlogoheight}{#1}}
 
-% Footline: HM logo left, custom text center, frame numbers right
+% Vertical fine-tuning for the footer logo only
+% Positive values move the logo up, negative values move it down
+% Example: \sethmfooterlogovshift{0.5ex}
+\newlength{\hmfooterlogovshift}\setlength{\hmfooterlogovshift}{1ex}
+\newcommand{\sethmfooterlogovshift}[1]{\setlength{\hmfooterlogovshift}{#1}}
+
+% Footer padding (adjust to move content slightly inward)
+\newlength{\hmfooterpadleft}\setlength{\hmfooterpadleft}{6mm}
+\newlength{\hmfooterpadcenter}\setlength{\hmfooterpadcenter}{4mm}
+\newlength{\hmfooterpadright}\setlength{\hmfooterpadright}{6mm}
+% Spacing between logo and footer text ("regular" horizontal gap)
+% Example: \sethmfooterlogotextsep{0.75em}
+\newlength{\hmfooterlogotextsep}\setlength{\hmfooterlogotextsep}{1em}
+\newcommand{\sethmfooterlogotextsep}[1]{\setlength{\hmfooterlogotextsep}{#1}}
+% Width of the footer text block (so it can wrap to two lines)
+% Example: \sethmfootertextwidth{0.60\paperwidth}
+\newlength{\hmfootertextwidth}\setlength{\hmfootertextwidth}{0.60\paperwidth}
+\newcommand{\sethmfootertextwidth}[1]{\setlength{\hmfootertextwidth}{#1}}
+
+% Vertical fine-tuning for footer text (title + custom text) only
+% Positive values move the text up, negative values move it down
+% Example: \sethmfootertextvshift{0.5ex}
+\newlength{\hmfootertextvshift}\setlength{\hmfootertextvshift}{1.5ex}
+\newcommand{\sethmfootertextvshift}[1]{\setlength{\hmfootertextvshift}{#1}}
+
+% Bottom padding: move footer content slightly up from the bottom edge
+\newlength{\hmfooterpadbottom}\setlength{\hmfooterpadbottom}{4mm}
+% Compute adjusted height/depth so total remains constant while adding bottom padding
+\newlength{\hmfooterht}\setlength{\hmfooterht}{3ex}
+\newlength{\hmfooterdp}\setlength{\hmfooterdp}{1ex}
+\addtolength{\hmfooterdp}{\hmfooterpadbottom}
+\addtolength{\hmfooterht}{-\hmfooterpadbottom}
+
+% Footline: HM logo left + footer text, frame numbers right
 \setbeamertemplate{footline}{%
   \leavevmode%
   \hbox{%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,left]{footline}%
-      \hspace{1ex}\raisebox{-0.2ex}{\includegraphics[height=2.1ex]{\hmlogopath}}%
+    % Left area (combined): logo + regular gap + footer text
+    \begin{beamercolorbox}[wd=.82\paperwidth,ht=\hmfooterht,dp=\hmfooterdp,left]{footline}%
+      % extra left padding to move logo slightly inwards
+      \hspace{\hmfooterpadleft}%
+  % footer logo (height configurable via \hmfooterlogoheight), vertically centered
+  % Extra fine-tuning via \hmfooterlogovshift (positive = up, negative = down)
+  \raisebox{\hmfooterlogovshift}{\raisebox{-.5\height}{\includegraphics[height=\hmfooterlogoheight]{\hmlogopath}}}%
+      % regular separation between logo and text
+      \hspace{\hmfooterlogotextsep}%
+  % footer text block to the right of the logo (two lines), vertically centered with the logo
+  % Line 1: presentation title (short title if set), Line 2: custom footer text
+  % Styling: same font weight for both lines (no bold on title)
+  % Extra fine-tuning via \hmfootertextvshift (positive = up, negative = down)
+  \raisebox{\hmfootertextvshift}{\raisebox{-.5\height}{\parbox[c]{\hmfootertextwidth}{\usebeamerfont{footline}\footnotesize \insertshorttitle\\[-0.2ex] \hmfootertext}}}%
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.64\paperwidth,ht=3ex,dp=1ex,center]{footline}%
-      \usebeamerfont{footline}\footnotesize \hmfootertext
-    \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.18\paperwidth,ht=3ex,dp=1ex,right]{footline}%
+  \begin{beamercolorbox}[wd=.18\paperwidth,ht=\hmfooterht,dp=\hmfooterdp,right]{footline}%
       \usebeamerfont{footline}\footnotesize \insertframenumber{}%
-      \hspace{1.25ex}
+      % extra right padding to move page number slightly inwards
+      \hspace{\hmfooterpadright}
     \end{beamercolorbox}%
   }%
   \vskip0pt%

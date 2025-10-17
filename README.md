@@ -21,6 +21,15 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 3. Optional: Eigenes Logo einbinden – Datei ins Projekt laden
    und in `main.tex` `\sethmlogo{<dein_logo>}` setzen.
 4. Fußzeilentext per `\sethmfooter{...}` ändern.
+5. Vertikalen Versatz nur für den Fußzeilen-Text (Titel + Copyright) feinjustieren:
+  `\sethmfootertextvshift{0.5ex}` (positiver Wert = höher, negativer Wert = tiefer).
+
+### Häufige Anpassungen
+- Logo-Größe in der Fußzeile: `\sethmfooterlogoheight{3ex}`
+- Abstand zwischen Logo und Text: `\sethmfooterlogotextsep{0.75em}`
+- Textbreite im Fußbereich: `\sethmfootertextwidth{0.60\paperwidth}`
+- Vertikale Feinjustierung NUR für den Textblock: `\sethmfootertextvshift{0.25ex}`
+- Vertikale Feinjustierung NUR für das Logo: `\sethmfooterlogovshift{0.5ex}`
 
 ## Automatisierte Vorschau
 Für jeden Push kompiliert GitHub Actions automatisch die Datei `main.tex`.
