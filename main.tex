@@ -9,6 +9,25 @@
 
 \usetheme{HM} % our custom theme
 
+% ----------------- Optional: override theme colours -------------------------
+% You can override the theme defaults using the macros provided by
+% `beamerthemeHM.sty`. Put these after \usetheme{HM} (or after package load).
+% Examples (leave commented or adapt as needed):
+%
+% 1) Change the primary HM red colour (hex HTML model):
+% \sethmprimarycolor[HTML]{0077CC} % sets HMRed to a blue
+%
+% 2) Set example block title/body colours (title, body):
+% \sethmexampleblockcolors[HTML]{00AA66}{F0FFF0} % green title, very light green body
+%
+% 3) Set alert block title/body colours (title, body):
+% \sethmalertblockcolors[HTML]{FF7700}{FFF4E6} % orange title, light orange body
+%
+% Notes:
+% - The optional first argument is the xcolor model (HTML, rgb, etc.).
+% - If you omit these, the theme defaults remain unchanged.
+
+
 % --- Meta ---
 \title{Titel der Präsentation}
 \subtitle{Optionaler Untertitel oder Slogan}
@@ -24,7 +43,7 @@
 
 % Optional: separate footer logo (falls back to \sethmlogo if not set)
 % To use: uncomment and set your file name
-\sethmfooterlogo{}
+% \sethmfooterlogo{hm_footer_logo.png}
 
 % Optional: table of contents style: numbers | bullets | none (default: numbers)
 % \sethmtocstyle{bullets}

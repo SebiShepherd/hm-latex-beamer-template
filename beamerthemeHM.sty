@@ -5,6 +5,73 @@
 \definecolor{HMRed}{HTML}{FB5454}
 \definecolor{HMGray}{HTML}{E6E6E6}
 
+% -- Color setters / overrides -------------------------------------------------
+% Users can call the following commands in their document (after \usetheme{HM})
+% to override the theme colours.
+% \sethmprimarycolor[<model>]{<spec>}  e.g. \sethmprimarycolor[HTML]{FF0000}
+% \sethmexampleblockcolors[<model>]{<title>}{<body>}
+% \sethmalertblockcolors[<model>]{<title>}{<body>}
+% The optional <model> defaults to HTML. Supported models depend on xcolor.
+
+% Primary (HM) colour: redefine the named colour HMRed and update elements that
+% reference it (like list bullets). Optional model argument (default HTML).
+\newcommand{\sethmprimarycolor}[2][HTML]{%
+  \definecolor{HMRed}{#1}{#2}%
+  % update beamer elements that use HMRed
+  \setbeamercolor{item}{fg=HMRed}%
+}
+
+% Example block colours: separate title BG/FG and body BG/FG so defaults can be
+% transparent/white for backgrounds while title text is green by default.
+\definecolor{hmExampleTitleBgColor}{HTML}{FFFFFF} % default: white (transparent-like)
+\definecolor{hmExampleTitleFgColor}{HTML}{2E8B57} % default: green (SeaGreen)
+\definecolor{hmExampleBodyBgColor}{HTML}{FFFFFF}  % default: white
+\definecolor{hmExampleBodyFgColor}{HTML}{000000}  % default: black
+\newcommand{\sethmexampleblockcolors}[3][HTML]{%
+  % API: \sethmexampleblockcolors[<model>]{<title-fg>}{<body-bg>}
+  % This keeps your existing two-arg usage working (e.g. both 000000).
+  \definecolor{hmExampleTitleFgColor}{#1}{#2}%
+  \definecolor{hmExampleBodyBgColor}{#1}{#3}%
+  % Apply to primary and alternate beamercolor keys
+  \setbeamercolor{exampleblock title}{bg=hmExampleTitleBgColor,fg=hmExampleTitleFgColor}%
+  \setbeamercolor{exampleblock body}{bg=hmExampleBodyBgColor,fg=hmExampleBodyFgColor}%
+  \setbeamercolor{block title example}{bg=hmExampleTitleBgColor,fg=hmExampleTitleFgColor}%
+  \setbeamercolor{block body example}{bg=hmExampleBodyBgColor,fg=hmExampleBodyFgColor}%
+  \setbeamercolor{example text}{fg=hmExampleTitleFgColor}
+}
+
+% Alert block colours: separate title BG/FG and body BG/FG. Default: white
+% backgrounds and bright red title text (HMRed).
+\definecolor{hmAlertTitleBgColor}{HTML}{FFFFFF} % default: white
+\definecolor{hmAlertTitleFgColor}{HTML}{FB5454} % default: HMRed (bright red)
+\definecolor{hmAlertBodyBgColor}{HTML}{FFFFFF}  % default: white
+\definecolor{hmAlertBodyFgColor}{HTML}{000000}  % default: black
+\newcommand{\sethmalertblockcolors}[3][HTML]{%
+  % API: \sethmalertblockcolors[<model>]{<title-fg>}{<body-bg>}
+  \definecolor{hmAlertTitleFgColor}{#1}{#2}%
+  \definecolor{hmAlertBodyBgColor}{#1}{#3}%
+  % Apply to primary and alternate beamercolor keys
+  \setbeamercolor{alertblock title}{bg=hmAlertTitleBgColor,fg=hmAlertTitleFgColor}%
+  \setbeamercolor{alertblock body}{bg=hmAlertBodyBgColor,fg=hmAlertBodyFgColor}%
+  \setbeamercolor{block title alerted}{bg=hmAlertTitleBgColor,fg=hmAlertTitleFgColor}%
+  \setbeamercolor{block body alerted}{bg=hmAlertBodyBgColor,fg=hmAlertBodyFgColor}%
+  \setbeamercolor{alerted text}{fg=hmAlertTitleFgColor}
+}
+
+% Apply defaults to beamer templates (so theme looks the same unless users
+% override with the setter macros above)
+\setbeamercolor{exampleblock title}{bg=hmExampleTitleBgColor,fg=hmExampleTitleFgColor}
+\setbeamercolor{exampleblock body}{bg=hmExampleBodyBgColor,fg=hmExampleBodyFgColor}
+\setbeamercolor{block title example}{bg=hmExampleTitleBgColor,fg=hmExampleTitleFgColor}
+\setbeamercolor{block body example}{bg=hmExampleBodyBgColor,fg=hmExampleBodyFgColor}
+\setbeamercolor{example text}{fg=hmExampleTitleFgColor}
+\setbeamercolor{alertblock title}{bg=hmAlertTitleBgColor,fg=hmAlertTitleFgColor}
+\setbeamercolor{alertblock body}{bg=hmAlertBodyBgColor,fg=hmAlertBodyFgColor}
+\setbeamercolor{block title alerted}{bg=hmAlertTitleBgColor,fg=hmAlertTitleFgColor}
+\setbeamercolor{block body alerted}{bg=hmAlertBodyBgColor,fg=hmAlertBodyFgColor}
+\setbeamercolor{alerted text}{fg=hmAlertTitleFgColor}
+
+
 % Basic beamer settings
 \mode<presentation>
 \setbeamercolor{structure}{fg=black}
