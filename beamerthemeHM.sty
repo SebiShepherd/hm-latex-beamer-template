@@ -31,12 +31,22 @@
 % Separate footer logo (optional, defaults to main logo if not set)
 % Usage: Uncomment the next line and replace the file name to override the footer logo
 % \newcommand{\hmfooterlogopath}{hm_footer_logo.png}
-% Provide a setter that works whether or not the macro was previously defined
+% Hidden flag: if true, footer logo is not rendered (and gap is removed)
+\newif\ifhmfooterlogohidden
+\hmfooterlogohiddenfalse
+% Setter: set footer logo path or hide it if empty
 \newcommand{\sethmfooterlogo}[1]{%
   \providecommand{\hmfooterlogopath}{}% define if not yet defined
-  \renewcommand{\hmfooterlogopath}{#1}% then set to provided path
+  \if\relax\detokenize{#1}\relax
+    % empty argument: hide logo
+    \hmfooterlogohiddentrue
+  \else
+    % non-empty: set path and show logo
+    \renewcommand{\hmfooterlogopath}{#1}%
+    \hmfooterlogohiddenfalse
+  \fi
 }
-% Helper to get the effective footer logo path (fallback to main logo if not set)
+% Helper: get effective footer logo path (fallback to main logo if not set)
 \newcommand{\hmeffectivefooterlogo}{%
   \ifcsname hmfooterlogopath\endcsname
     \hmfooterlogopath
@@ -92,9 +102,13 @@
       \hspace{\hmfooterpadleft}%
   % footer logo (height configurable via \hmfooterlogoheight), vertically centered
   % Extra fine-tuning via \hmfooterlogovshift (positive = up, negative = down)
-  \raisebox{\hmfooterlogovshift}{\raisebox{-.5\height}{\includegraphics[height=\hmfooterlogoheight]{\hmeffectivefooterlogo}}}%
-      % regular separation between logo and text
-      \hspace{\hmfooterlogotextsep}%
+  \ifhmfooterlogohidden
+    % no logo, no separation
+  \else
+    \raisebox{\hmfooterlogovshift}{\raisebox{-.5\height}{\includegraphics[height=\hmfooterlogoheight]{\hmeffectivefooterlogo}}}%
+    % regular separation between logo and text
+    \hspace{\hmfooterlogotextsep}%
+  \fi
   % footer text block to the right of the logo (two lines), vertically centered with the logo
   % Line 1: presentation title (short title if set), Line 2: custom footer text
   % Styling: same font weight for both lines (no bold on title)
@@ -136,3 +150,38 @@
 \setbeamercolor{item}{fg=HMRed}
 \setbeamertemplate{itemize items}[circle]
 \setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+
+% Table of contents (TOC) style: numbers | bullets | none
+% Default: numbers (1, 1.1, ...). Change via \sethmtocstyle{bullets} or {none}.
+% The style affects how entries in \tableofcontents are rendered.
+\makeatletter
+% current style token (numbers|bullets|none)
+\newcommand{\hmtocstyle}{numbers}
+% public setter: call and it will reapply the corresponding template immediately
+\newcommand{\sethmtocstyle}[1]{\renewcommand{\hmtocstyle}{#1}\hmapplytocstyle}
+% internal: apply current style, fallback to numbers for unknown value
+\newcommand{\hmapplytocstyle}{%
+  \ifcsname hmtocstyle@\hmtocstyle\endcsname
+    \csname hmtocstyle@\hmtocstyle\endcsname
+  \else
+    \hmtocstyle@numbers
+  \fi
+}
+% numbered style (e.g., 1, 1.1)
+\newcommand{\hmtocstyle@numbers}{%
+  \setbeamertemplate{section in toc}{\inserttocsectionnumber.\hspace{0.5em}\inserttocsection}%
+  \setbeamertemplate{subsection in toc}{\hspace{1.7em}\inserttocsubsectionnumber.\hspace{0.5em}\inserttocsubsection}%
+}
+% bullet style (classic dots)
+\newcommand{\hmtocstyle@bullets}{%
+  \setbeamertemplate{section in toc}{\textbullet\hspace{0.6em}\inserttocsection}%
+  \setbeamertemplate{subsection in toc}{\hspace{1.7em}\textbullet\hspace{0.6em}\inserttocsubsection}%
+}
+% none style (no markers)
+\newcommand{\hmtocstyle@none}{%
+  \setbeamertemplate{section in toc}{\inserttocsection}%
+  \setbeamertemplate{subsection in toc}{\hspace{1.7em}\inserttocsubsection}%
+}
+% apply default on theme load
+\hmapplytocstyle
+\makeatother

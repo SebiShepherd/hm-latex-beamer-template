@@ -25,26 +25,41 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
   `\sethmfootertextvshift{0.5ex}` (positiver Wert = höher, negativer Wert = tiefer).
 
 ### Separates Footer-Logo (optional)
-- Standard: Titelfolie und Footer verwenden das gleiche Hauptlogo (`hm_logo.png` bzw. was per `\sethmlogo{...}` gesetzt wird).
-- Falls du im Footer ein anderes Logo anzeigen möchtest, gibt es zwei Möglichkeiten:
+- **Standard:** Titelfolie und Footer verwenden das gleiche Hauptlogo (`hm_logo.png` bzw. was per `\sethmlogo{...}` gesetzt wird).
+- **Anderes Footer-Logo setzen** (empfohlen in `main.tex`):
 
-  1) In deiner Präambel (empfohlen):
+  ```tex
+  \sethmfooterlogo{hm_footer_logo.png}
+  ```
 
-    ```tex
-    % Anderes Footer-Logo setzen
-    \sethmfooterlogo{hm_footer_logo.png}
-    ```
+- **Footer-Logo ausblenden:**
 
-  2) Direkt im Theme (Alternative): In `beamerthemeHM.sty` die auskommentierte Zeile einkommentieren und anpassen:
+  ```tex
+  \sethmfooterlogo{}
+  ```
+  
+  → Logo und Abstand zum Text werden komplett entfernt.
 
-    ```tex
-    % \newcommand{\hmfooterlogopath}{hm_footer_logo.png}
-    ```
+- **Fallback:** Wenn `\sethmfooterlogo{...}` nicht aufgerufen wird, nutzt der Footer automatisch das Hauptlogo.
+- **Hinweis:** Die Titelfolie verwendet immer das Hauptlogo (gesetzt per `\sethmlogo{...}`).
 
-    → Entferne das `%` am Zeilenanfang und ersetze `hm_footer_logo.png` durch deinen Dateinamen.
+### Inhaltsverzeichnis: Nummern, Bullets oder nichts
+- Standard: nummeriert (1, 1.1, ...).
+- Umstellen per Präambel in `main.tex`:
 
-- Fallback: Wenn kein Footer-Logo gesetzt ist (Zeile bleibt auskommentiert und du rufst `\sethmfooterlogo{...}` nicht auf), verwendet der Footer automatisch das Hauptlogo.
-- Hinweis: Die Titelfolie nutzt immer das Hauptlogo (`\hmlogopath`).
+  ```tex
+  % Nummeriert (Standard)
+  % \sethmtocstyle{numbers}
+
+  % Klassische Bullet Points
+  \sethmtocstyle{bullets}
+
+  % Keine Marker
+  % \sethmtocstyle{none}
+  ```
+
+- Gilt für `\tableofcontents` (Abschnitts- und Unterabschnittseinträge).
+- Fallback: Unbekannte Werte werden automatisch als `numbers` behandelt.
 
 ### Häufige Anpassungen
 - Logo-Größe in der Fußzeile: `\sethmfooterlogoheight{3ex}`
