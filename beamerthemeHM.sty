@@ -169,13 +169,17 @@
 }
 % numbered style (e.g., 1, 1.1)
 \newcommand{\hmtocstyle@numbers}{%
-  \setbeamertemplate{section in toc}{\inserttocsectionnumber.\hspace{0.5em}\inserttocsection}%
-  \setbeamertemplate{subsection in toc}{\hspace{1.7em}\inserttocsubsectionnumber.\hspace{0.5em}\inserttocsubsection}%
+  \setbeamertemplate{section in toc}{%
+    {\usebeamercolor[fg]{item}\usebeamerfont{item}\inserttocsectionnumber.}\hspace{0.5em}\inserttocsection}%
+  \setbeamertemplate{subsection in toc}{%
+    \hspace{1.7em}{\usebeamercolor[fg]{item}\usebeamerfont{item}\inserttocsubsectionnumber.}\hspace{0.5em}\inserttocsubsection}%
 }
 % bullet style (classic dots)
 \newcommand{\hmtocstyle@bullets}{%
-  \setbeamertemplate{section in toc}{\textbullet\hspace{0.6em}\inserttocsection}%
-  \setbeamertemplate{subsection in toc}{\hspace{1.7em}\textbullet\hspace{0.6em}\inserttocsubsection}%
+  \setbeamertemplate{section in toc}{%
+    {\usebeamercolor[fg]{item}\usebeamerfont{item}\raisebox{0.15em}{\usebeamertemplate{itemize item}}}\hspace{0.6em}\inserttocsection}%
+  \setbeamertemplate{subsection in toc}{%
+    \hspace{1.7em}{\usebeamercolor[fg]{item}\usebeamerfont{item}\raisebox{0.15em}{\usebeamertemplate{itemize item}}}\hspace{0.6em}\inserttocsubsection}%
 }
 % none style (no markers)
 \newcommand{\hmtocstyle@none}{%
