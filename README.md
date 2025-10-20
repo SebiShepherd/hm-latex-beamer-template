@@ -24,6 +24,28 @@ Logo unten links, Copyright zentriert, Seitenzahl rechts.
 5. Vertikalen Versatz nur für den Fußzeilen-Text (Titel + Copyright) feinjustieren:
   `\sethmfootertextvshift{0.5ex}` (positiver Wert = höher, negativer Wert = tiefer).
 
+### Separates Footer-Logo (optional)
+- Standard: Titelfolie und Footer verwenden das gleiche Hauptlogo (`hm_logo.png` bzw. was per `\sethmlogo{...}` gesetzt wird).
+- Falls du im Footer ein anderes Logo anzeigen möchtest, gibt es zwei Möglichkeiten:
+
+  1) In deiner Präambel (empfohlen):
+
+    ```tex
+    % Anderes Footer-Logo setzen
+    \sethmfooterlogo{hm_footer_logo.png}
+    ```
+
+  2) Direkt im Theme (Alternative): In `beamerthemeHM.sty` die auskommentierte Zeile einkommentieren und anpassen:
+
+    ```tex
+    % \newcommand{\hmfooterlogopath}{hm_footer_logo.png}
+    ```
+
+    → Entferne das `%` am Zeilenanfang und ersetze `hm_footer_logo.png` durch deinen Dateinamen.
+
+- Fallback: Wenn kein Footer-Logo gesetzt ist (Zeile bleibt auskommentiert und du rufst `\sethmfooterlogo{...}` nicht auf), verwendet der Footer automatisch das Hauptlogo.
+- Hinweis: Die Titelfolie nutzt immer das Hauptlogo (`\hmlogopath`).
+
 ### Häufige Anpassungen
 - Logo-Größe in der Fußzeile: `\sethmfooterlogoheight{3ex}`
 - Abstand zwischen Logo und Text: `\sethmfooterlogotextsep{0.75em}`

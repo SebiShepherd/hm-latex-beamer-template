@@ -28,6 +28,22 @@
 % Logo handling (user provides hm_logo.png or pdf in project root)
 \newcommand{\hmlogopath}{hm_logo.png}
 \newcommand{\sethmlogo}[1]{\renewcommand{\hmlogopath}{#1}}
+% Separate footer logo (optional, defaults to main logo if not set)
+% Usage: Uncomment the next line and replace the file name to override the footer logo
+% \newcommand{\hmfooterlogopath}{hm_footer_logo.png}
+% Provide a setter that works whether or not the macro was previously defined
+\newcommand{\sethmfooterlogo}[1]{%
+  \providecommand{\hmfooterlogopath}{}% define if not yet defined
+  \renewcommand{\hmfooterlogopath}{#1}% then set to provided path
+}
+% Helper to get the effective footer logo path (fallback to main logo if not set)
+\newcommand{\hmeffectivefooterlogo}{%
+  \ifcsname hmfooterlogopath\endcsname
+    \hmfooterlogopath
+  \else
+    \hmlogopath
+  \fi
+}
 % Footer logo size on content slides (increase to enlarge the logo)
 % Example: \sethmfooterlogoheight{3ex} or {8pt}
 \newlength{\hmfooterlogoheight}\setlength{\hmfooterlogoheight}{2.6ex}
@@ -76,7 +92,7 @@
       \hspace{\hmfooterpadleft}%
   % footer logo (height configurable via \hmfooterlogoheight), vertically centered
   % Extra fine-tuning via \hmfooterlogovshift (positive = up, negative = down)
-  \raisebox{\hmfooterlogovshift}{\raisebox{-.5\height}{\includegraphics[height=\hmfooterlogoheight]{\hmlogopath}}}%
+  \raisebox{\hmfooterlogovshift}{\raisebox{-.5\height}{\includegraphics[height=\hmfooterlogoheight]{\hmeffectivefooterlogo}}}%
       % regular separation between logo and text
       \hspace{\hmfooterlogotextsep}%
   % footer text block to the right of the logo (two lines), vertically centered with the logo
