@@ -92,3 +92,25 @@ externe Beiträge ein Ergebnis erhalten. Die Ausgabe erscheint auf zwei Wegen:
 Sobald GitHub Pages aktiviert ist, veröffentlicht der Workflow erfolgreiche Branch-Builds
 automatisch. Für alle anderen Fälle zeigt die Workflow-Zusammenfassung an, dass das Artefakt
 heruntergeladen werden kann.
+
+## Kurze Referenz: Abstände & Farb-Setter
+Die Theme stellt einige kleine Helfer zur Verfügung, die du in `main.tex` (nach `\usetheme{HM}`)
+einfach einkommentieren kannst.
+
+- Frametitels-Abstände (Standard: oben = Footer-Bottom-Padding, links = oben):
+
+```tex
+% \sethmframetitletop{6mm}   % Abstand oberhalb des Frame-Titels
+% \sethmframetitleleft{6mm}  % Abstand links vor dem Frame-Titel
+```
+
+- Farb-Setter (Beispiele):
+
+```tex
+% \sethmprimarycolor[HTML]{0077CC}                % setzt HM-Rot (HMRed)
+% \sethmexampleblockcolors[HTML]{00AA66}{F0FFF0}  % example title fg, body bg
+% \sethmalertblockcolors[HTML]{FF0000}{FFF0F0}   % alert title fg, body bg
+```
+
+Die Makros sind absichtlich knapp gehalten; die Setter ändern alle relevanten beamercolor-Keys
+intern, sodass Überschriften in `exampleblock` und `alertblock` konsistent erscheinen.

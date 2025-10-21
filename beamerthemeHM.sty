@@ -71,6 +71,8 @@
 \setbeamercolor{block body alerted}{bg=hmAlertBodyBgColor,fg=hmAlertBodyFgColor}
 \setbeamercolor{alerted text}{fg=hmAlertTitleFgColor}
 
+% (frametitle spacing is defined later after footer padding)
+
 
 % Basic beamer settings
 \mode<presentation>
@@ -152,12 +154,44 @@
 \newcommand{\sethmfootertextvshift}[1]{\setlength{\hmfootertextvshift}{#1}}
 
 % Bottom padding: move footer content slightly up from the bottom edge
-\newlength{\hmfooterpadbottom}\setlength{\hmfooterpadbottom}{4mm}
+\makeatletter
+\@ifundefined{hmfooterpadbottom}{%
+  \newlength{\hmfooterpadbottom}%
+  \setlength{\hmfooterpadbottom}{4mm}%
+}{}
+\makeatother
 % Compute adjusted height/depth so total remains constant while adding bottom padding
 \newlength{\hmfooterht}\setlength{\hmfooterht}{3ex}
 \newlength{\hmfooterdp}\setlength{\hmfooterdp}{1ex}
 \addtolength{\hmfooterdp}{\hmfooterpadbottom}
 \addtolength{\hmfooterht}{-\hmfooterpadbottom}
+
+% ----------------- Frametitle top spacing ----------------------------------
+% Define a length that controls vertical spacing above the frametitle. Default
+% equals the footer bottom padding (so top/bottom feel balanced).
+\newlength{\hmframetitletop}
+\makeatletter
+\ifcsname hmfooterpadbottom\endcsname
+  \setlength{\hmframetitletop}{\hmfooterpadbottom}
+\else
+  \setlength{\hmframetitletop}{4mm}
+\fi
+\makeatother
+\newcommand{\sethmframetitletop}[1]{\setlength{\hmframetitletop}{#1}}
+% Define horizontal (left) spacing for frametitle and default it to the top
+% spacing so both are identical by default. Users can override independently.
+\newlength{\hmframetitleleft}
+\setlength{\hmframetitleleft}{\hmframetitletop}
+\newcommand{\sethmframetitleleft}[1]{\setlength{\hmframetitleleft}{#1}}
+% Define a safe frametitle template that applies the configured top and left
+% spacing inside a beamercolorbox (avoids horizontal-mode errors).
+\setbeamertemplate{frametitle}{%
+  \vspace*{\hmframetitletop}% top gap
+  \begin{beamercolorbox}[sep=1ex,wd=\paperwidth]{frametitle}%
+    \hspace*{\hmframetitleleft}% left gap
+    {\usebeamerfont{frametitle}\insertframetitle}%
+  \end{beamercolorbox}%
+}
 
 % Footline: HM logo left + footer text, frame numbers right
 \setbeamertemplate{footline}{%
