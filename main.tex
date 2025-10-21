@@ -209,19 +209,34 @@
 \end{frame}
 
 \begin{frame}{Verschachtelte Listen}
-\begin{itemize}
-  \item \textbf{Hauptpunkt 1}
+% Example: show default look. To change markers only for this frame we use a group
+% so global templates are not affected.
+% The theme now provides sensible defaults for nested item markers (see
+% `beamerthemeHM.sty`). If you want to override markers only on this frame,
+% uncomment the \begingroup block below and adjust the templates.
+
+%\begingroup
+%  % Local marker overrides for demonstration (frame-local)
+%  \setbeamertemplate{itemize item}[circle]
+%  \setbeamertemplate{itemize subitem}[triangle]
+%  \setbeamertemplate{itemize subsubitem}{\raisebox{0.12ex}{\scriptsize$\rightarrow$}}
   \begin{itemize}
-    \item Unterpunkt A
-    \item Unterpunkt B
+    \item \textbf{Hauptpunkt 1}
+      \begin{itemize}
+        \item Unterpunkt A
+        \item Unterpunkt B
+          \begin{itemize}
+            \item Detaillierter Punkt
+          \end{itemize}
+      \end{itemize}
+    \item \textbf{Hauptpunkt 2}
+      \begin{itemize}
+        \item Unterpunkt C mit weiteren Details
+        \item Unterpunkt D
+      \end{itemize}
+    \item \textbf{Hauptpunkt 3}
   \end{itemize}
-  \item \textbf{Hauptpunkt 2}
-  \begin{itemize}
-    \item Unterpunkt C mit weiteren Details
-    \item Unterpunkt D
-  \end{itemize}
-  \item \textbf{Hauptpunkt 3}
-\end{itemize}
+% \endgroup
 \end{frame}
 
 \section{Mehrspaltige Inhalte}

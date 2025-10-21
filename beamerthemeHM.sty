@@ -250,6 +250,38 @@
 % Itemize bullets in HM red
 \setbeamercolor{item}{fg=HMRed}
 \setbeamertemplate{itemize items}[circle]
+
+% ---------------------------------------------------------------------------
+% Nested itemize markers
+% By default Beamer supports separate templates for three nested levels:
+%  - itemize item     (first / top-level)
+%  - itemize subitem  (second level)
+%  - itemize subsubitem (third level)
+%
+% The theme sets the top-level marker above. If you want different markers for
+% nested levels (hollow circle, triangle, arrow, etc.) you can either change
+% them globally here or locally inside a frame using a TeX group (\begingroup
+% ... \endgroup). Common built-in shapes are: circle, ball, triangle, square,
+% dash. You can also set an arbitrary symbol, e.g. an arrow.
+%
+% Examples (these are *suggestions* and are currently the commented defaults):
+% \setbeamertemplate{itemize subitem}[triangle]
+% \setbeamertemplate{itemize subsubitem}[dash]
+%
+% If you prefer a custom symbol (like an arrow or a different glyph), use the
+% brace form. For example:
+% \setbeamertemplate{itemize subitem}{\raisebox{0.15ex}{\scriptsize$\rightarrow$}}
+% or a small hollow bullet:
+% \setbeamertemplate{itemize subitem}{\raisebox{0.08ex}{\scriptsize$\circ$}}
+%
+% If you want the theme to set a specific default for nested levels, you can
+% uncomment the following lines. They are left commented so the theme doesn't
+% force a look on existing presentations.
+% Set sensible defaults for nested item markers. These can be overridden by
+% users in their document (after \usetheme{HM}) or locally per-frame.
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{itemize subsubitem}{\raisebox{0.15ex}{\scriptsize$\rightarrow$}}
+% ---------------------------------------------------------------------------
 \setbeamerfont{frametitle}{series=\bfseries,size=\Large}
 
 % Table of contents (TOC) style: numbers | bullets | none

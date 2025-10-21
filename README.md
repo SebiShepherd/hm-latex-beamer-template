@@ -114,3 +114,43 @@ einfach einkommentieren kannst.
 
 Die Makros sind absichtlich knapp gehalten; die Setter ändern alle relevanten beamercolor-Keys
 intern, sodass Überschriften in `exampleblock` und `alertblock` konsistent erscheinen.
+
+### Listen: Marker für verschachtelte Ebenen (itemize)
+
+Standardmäßig verwendet das Theme den runden Marker (`circle`) für die oberste
+Aufzählungsebene. Beamer unterstützt jedoch getrennte Templates für mehrere
+verschachtelte Ebenen: `itemize item` (1. Ebene), `itemize subitem` (2. Ebene)
+und `itemize subsubitem` (3. Ebene). Du kannst diese entweder global in der
+Theme-Datei (`beamerthemeHM.sty`) ändern oder lokal in `main.tex` für einzelne Slides.
+
+Einige Beispiele, die du in `main.tex` nach `\usetheme{HM}` verwenden kannst:
+
+```tex
+% Globale Änderung (für das ganze Dokument)
+\setbeamertemplate{itemize item}[circle]      % Hauptpunkte: gefüllter Kreis
+\setbeamertemplate{itemize subitem}[triangle] % Unterpunkte: kleines Dreieck
+\setbeamertemplate{itemize subsubitem}[dash]  % Unter-Unterpunkte: kurzer Strich
+
+% Lokale Änderung nur für einen Frame (nur innerhalb der Gruppe wirksam)
+\begin{frame}{Verschachtelte Listen (andere Marker)}
+  \begingroup % Änderungen gelten nur innerhalb dieser Gruppe
+  \setbeamertemplate{itemize item}[circle]
+  \setbeamertemplate{itemize subitem}{\raisebox{0.12ex}{\scriptsize$\circ$}}
+  \setbeamertemplate{itemize subsubitem}{\raisebox{0.0ex}{\scriptsize$\rightarrow$}}
+  \begin{itemize}
+    \item Hauptpunkt A
+      \begin{itemize}
+        \item Unterpunkt A.1
+        \item Unterpunkt A.2
+          \begin{itemize}
+            \item Detaillierter Punkt
+          \end{itemize}
+      \end{itemize}
+  \end{itemize}
+  \endgroup
+\end{frame}
+```
+
+Hinweis: Für komplett eigene Symbole (z. B. Pfeile) setze die Template-Inhalte
+auf eine kleine Formel/Box, wie im Beispiel gezeigt (`\scriptsize$\rightarrow$`).
+Diese Methode ist kompatibel mit Overleaf und lokalen TeX-Installationen.
