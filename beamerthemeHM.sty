@@ -225,6 +225,41 @@
   \vskip0pt%
 }
 
+% ----------------- Footnotes -------------------------------------------------
+% Right-align footnotes within the content width so they appear
+% between footer text/logo (left) and page number (right).
+\setbeamerfont{footnote}{size=\scriptsize}
+\setbeamerfont{footnote mark}{size=\scriptsize}
+% Vertical space between main text and footnotes
+\setlength{\skip\footins}{0.75\baselineskip}
+% Width of the right-aligned footnote column (inside content width)
+\newlength{\hmfootnotewidth}\setlength{\hmfootnotewidth}{.32\paperwidth}
+\newcommand{\sethmfootnotewidth}[1]{\setlength{\hmfootnotewidth}{#1}}
+% Gap to the page number: positive values shift the footnote area leftwards
+\newlength{\hmfootnoteoffset}\setlength{\hmfootnoteoffset}{12mm}
+\newcommand{\sethmfootnoteoffset}[1]{\setlength{\hmfootnoteoffset}{#1}}
+% Footnote formatting: place box at an absolute horizontal position derived from
+% the footline layout: left area width is .82\paperwidth and right area .18\paperwidth.
+% We align the footnote box so that its right edge sits at
+% (paperwidth - right area width - hmfooterpadright - hmfootnoteoffset).
+\setbeamertemplate{footnote}{%
+  \parindent0pt\noindent
+  \makebox[\paperwidth][l]{%
+    \hspace*{\dimexpr .82\paperwidth - \hmfootnotewidth - \hmfooterpadright - \hmfootnoteoffset \relax}%
+    \parbox[b]{\hmfootnotewidth}{\usebeamerfont{footnote}\scriptsize\raggedright
+      \parindent1em\noindent\hbox to 1.8ex{\hfil\insertfootnotemark}\insertfootnotetext\par
+    }% box
+  }\par}
+
+% Footnote rule aligned with the footnote box
+\renewcommand{\footnoterule}{%
+  \vspace*{0.4ex}% small space before rule
+  \noindent\makebox[\paperwidth][l]{%
+    \hspace*{\dimexpr .82\paperwidth - \hmfootnotewidth - \hmfooterpadright - \hmfootnoteoffset \relax}%
+    \rule{\hmfootnotewidth}{0.4pt}% match the footnote box width
+  }%
+  \vspace*{0.6ex}}
+
 % Title page with big HM logo bottom-left
 \setbeamertemplate{title page}{%
   \begingroup
