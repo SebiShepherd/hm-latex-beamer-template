@@ -45,6 +45,8 @@
 % Optional: table of contents style: numbers | bullets | none (default: numbers)
 % \sethmtocstyle{bullets}
 
+% \sethmfootnoteoffset{-10mm}
+
 \begin{document}
 
 \begin{frame}[plain]
@@ -60,7 +62,7 @@
 \begin{itemize}
   \item Stellen Sie hier die wichtigsten Punkte Ihrer Präsentation vor.
   \item Verwenden Sie kurze, prägnante Aussagen und ergänzen Sie sie ggf. um Stichworte.
-  \item Betonen Sie zentrale Kennzahlen oder Ergebnisse mit \textbf{fetter Schrift}.
+  \item Betonen Sie Schlüssel- und Fachwörter mit \textbf{fetter Schrift}.
 \end{itemize}
 \end{frame}
 
@@ -206,6 +208,19 @@
   \item Implementation und Testing
   \item Roll-out und Dokumentation
 \end{enumerate}
+\end{frame}
+
+\section{Fu\ss{}noten}
+\begin{frame}{Fu\ss{}noten-Beispiel}
+Ein kurzer Satz mit einer Fu\ss{}note zur Quelle\footnote{Vgl. Beispielstudie 2025, Kap. 3.}. \\
+Zus\"atzlich kann eine zweite Anmerkung folgen\footnote{Weitere Details: Stand: \today.}.
+
+\vspace{0.5\baselineskip}
+\begin{itemize}
+  \item Punkt mit kurzer Erkl\"arung
+  \item Langerer Punkt, der \textit{ggf. umbricht} und trotzdem eine saubere
+  Platzierung der Fu\ss{}noten oberhalb der Seitenzahl zeigt
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Verschachtelte Listen}
