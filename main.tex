@@ -8,6 +8,21 @@
 \usepackage{siunitx}
 \usepackage{array}
 
+% --- Literaturverwaltung mit biblatex ---
+% Stil kann bei Bedarf geändert werden (z. B. numeric, authoryear, apa, ieee)
+\usepackage[
+  backend=biber,
+  style=apa,
+  sorting=nyt,
+  giveninits=true,
+  doi=true,
+  isbn=false,
+  url=true
+]{biblatex}
+% APA-Sprachmapping fr deutsche Silbentrennung/Bezeichnungen
+\DeclareLanguageMapping{ngerman}{ngerman-apa}
+\addbibresource{references.bib}
+
 \usetheme{HM} % our custom theme
 
 % Define custom colors:
@@ -422,6 +437,29 @@ Wikipedia. (o. D.). \textit{Wikipedia – Die freie Enzyklopädie}. \url{https:/
     \bottomrule
   \end{tabular}
 \end{table}
+\end{frame}
+
+\section{Literatur (biblatex)}
+\begin{frame}{Zitieren im Text}
+\small
+\textbf{Beispiele:}
+\begin{itemize}
+  \item Narrative Zitation: \textcite{mueller2024} betont die Bedeutung klarer Struktur.
+  \item Parenthetisch: Neuere Studien zeigen Vorteile \parencite{schmidt2023}.
+  \item Online-Ressourcen eignen sich f\"ur Einstiege \parencite{beispielOnline}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fu\ss{}noten-Zitat}
+Im Flie\ss{}text mit vollst\"andiger Referenz in der Fu\ss{}note\footfullcite{mueller2024}.
+
+\vspace{0.5\baselineskip}
+Weitere Erw\"ahnungen k\"onnen k\"urzer erfolgen \parencite{mueller2024, schmidt2023}.
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Literaturverzeichnis}
+% In Beamer ohne zus\"atzliche \section-\"Uberschrift
+\printbibliography[heading=none]
 \end{frame}
 
 \section{Zusammenfassung}

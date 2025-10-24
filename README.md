@@ -154,3 +154,53 @@ Einige Beispiele, die du in `main.tex` nach `\usetheme{HM}` verwenden kannst:
 Hinweis: Für komplett eigene Symbole (z. B. Pfeile) setze die Template-Inhalte
 auf eine kleine Formel/Box, wie im Beispiel gezeigt (`\scriptsize$\rightarrow$`).
 Diese Methode ist kompatibel mit Overleaf und lokalen TeX-Installationen.
+
+### Literatur (biblatex)
+- Das Template nutzt `biblatex` mit `biber` als Backend. Beispiele stehen in `main.tex` (Sektion "Literatur (biblatex)") und in `references.bib`.
+- DOIs werden im Literaturverzeichnis ausgegeben (Option `doi=true`).
+- Lokal kompilieren: `pdflatex main`, `biber main`, anschließend zweimal `pdflatex main`.
+- Overleaf: Project Settings → Compiler: LaTeX, Bibliography tool: Biber.
+- Zitieren im Text: `\textcite{mueller2024}`, `\parencite{schmidt2023}`, als Fußnote: `\footfullcite{mueller2024}`.
+
+### DOIs automatisch in BibTeX umwandeln
+- Script: `tools/doi2bib.ps1` (PowerShell, nutzt DOI Content Negotiation).
+- Beispiele:
+  - Ein DOI: `powershell -ExecutionPolicy Bypass -File tools/doi2bib.ps1 10.1038/nphys1170`
+  - Mehrere DOIs aus Datei: `powershell -ExecutionPolicy Bypass -File tools/doi2bib.ps1 -FromFile dois.txt`
+  - Ziel-Datei (optional): `-BibPath myrefs.bib` (Default: `references.bib`)
+- Das Script holt `application/x-bibtex` von `https://doi.org/<DOI>`, prüft grob auf Duplikate und hängt neue Einträge an.
+
+### Literatur (biblatex)
+- Das Template nutzt `biblatex` mit `biber` als Backend. Beispiele stehen in `main.tex` (Sektion "Literatur (biblatex)") und in `references.bib`.
+- Lokal kompilieren: `pdflatex main`, `biber main`, anschließend zweimal `pdflatex main`.
+- Overleaf: Project Settings → Compiler: LaTeX, Bibliography tool: Biber.
+- Zitieren im Text: `\textcite{mueller2024}`, `\parencite{schmidt2023}`, als Fußnote: `\footfullcite{mueller2024}`.
+## Zitierstil (APA 7)
+- Dieses Template verwendet APA 7 in `main.tex` via `biblatex`.
+- Stil festlegen/anpassen in `main.tex` an der Paketzeile und dem Sprach‑Mapping:
+
+```tex
+\usepackage[
+  backend=biber,
+  style=apa,
+  sorting=nyt,
+  giveninits=true,
+  doi=true,
+  isbn=false,
+  url=true
+]{biblatex}
+% Deutsche Bezeichner im APA-Stil:
+\DeclareLanguageMapping{ngerman}{ngerman-apa}
+```
+
+- Stilwechsel möglich: `style=ieee`, `style=numeric`, `style=authoryear` etc.
+
+## Overleaf: DOIs via doi2bib.org (ohne lokale Tools)
+- In Overleaf `references.bib` öffnen/anlegen.
+- Auf https://doi2bib.org den DOI (z. B. `10.1002/job.2735`) einfügen, den BibTeX‑Eintrag kopieren.
+- In `references.bib` einfügen und speichern. Overleaf: Project Settings → Bibliography tool: Biber.
+- In `main.tex` mit dem Schlüssel zitieren: `\textcite{<key>}`, `\parencite{<key>}`.
+
+## Langes Literaturverzeichnis (Beamer)
+- Der Literatur‑Frame nutzt `allowframebreaks` und bricht automatisch auf Folgefolien um.
+- In `main.tex` gesetzt als: `\begin{frame}[allowframebreaks]{Literaturverzeichnis}` mit `\printbibliography[heading=none]`.
